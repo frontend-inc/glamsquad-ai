@@ -7,6 +7,10 @@ export const QUERY_MARKETS = `
     shortName
     isEnabled
   }  
+  service {
+    id 
+    name
+  }
 }`;
 
 export const QUERY_MARKETS_EXTENDED = `
@@ -41,22 +45,3 @@ export const QUERY_MARKETS_EXTENDED = `
     updatedAt
   }
 }`;
-export const QUERY_SERVICES_BY_MARKET = `
-query GetAvailableServicesByLocation($marketId: String!) {
-  marketServices(where: { marketId: $marketId, isHidden: false, isClientBookable: true }) {
-    id
-    name
-    description
-    price
-    duration
-    
-    addOnMarketServices {
-      id
-      name
-      price
-      duration
-      isAddOn      
-    }
-  }
-}
-`;

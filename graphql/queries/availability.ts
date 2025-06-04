@@ -1,5 +1,39 @@
+export const QUERY_AVAILABILITY = `
+query GetServiceAvailability(
+  $startDateTime: Date!
+  $address: AddressInput!
+  $baseServiceId: String!
+  $addOnServiceIds: [String!]!
+  $limit: Int
+) {
+  
+availableAppointmentServices(
+    startDateTime: $startDateTime
+    address: $address
+    baseServiceId: $baseServiceId
+    addOnServiceIds: $addOnServiceIds
+    limit: $limit
+  ) {
+    appointmentService {
+      id
+      startDateTime
+      timezone
+      duration
+      customDuration
+      price
+      customPrice
+      providerName
+      providerPhotoUrl
+      providerMatchScore
+      isSquadSearch
+      isMember
+      bookingToken      
+    }
+    
+  }
+}`
 
-const availability = `query GetServiceAvailability(
+const QUERY_AVAILABILITY_EXTENDED = `query GetServiceAvailability(
   $startDateTime: Date!
   $address: AddressInput!
   $baseServiceId: String!

@@ -3,6 +3,8 @@
 import { Message } from 'ai';
 import { cn } from '@/lib/utils';
 import { parse } from 'partial-json';
+import { ServicesGrid } from './ServicesGrid';
+import { AvailabilityGrid } from './AvailabilityGrid';
 
 interface MessageItemProps {
   message: Message;
@@ -24,6 +26,28 @@ export function MessageItem({ message }: MessageItemProps) {
           </div>
         );
       case 'queryServices':
+        if (toolInvocation.result.services) {
+          return (
+            <ServicesGrid 
+              services={toolInvocation.result.services} 
+              message={toolInvocation.result.message}
+            />
+          );
+        }
+        return (
+          <div className="max-w-none">
+            {toolInvocation.result.message}
+          </div>
+        );
+      case 'queryAvailability':
+        if (toolInvocation.result.availability) {
+          return (
+            <AvailabilityGrid 
+              availability={toolInvocation.result.availability} 
+              message={toolInvocation.result.message}
+            />
+          );
+        }
         return (
           <div className="max-w-none">
             {toolInvocation.result.message}

@@ -56,3 +56,6 @@ const messages1 = {
     "content": "What services do you offer?"
   }]
 }
+
+
+"Let's book the Makeup service for 3pm today. My address is 801 S Miami Ave, Unit 1201, Miami, FL 33130."
