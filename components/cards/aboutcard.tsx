@@ -36,9 +36,7 @@ export default function AboutCard({ setInput }: AboutCardProps) {
           <CardTitle className="font-bold text-4xl text-center">How can I help you today?</CardTitle>
           <CardDescription>Book and modify Glamsquad appointments in your market</CardDescription>
         </CardHeader>
-        <CardContent className="text-sm text-muted-foreground/90 leading-normal"> 
-          <p className="mb-3">I'm here to support your journey toward greater wellbeing and mindfulness.</p>
-          
+        <CardContent className="text-sm text-muted-foreground/90 leading-normal">         
           {/* Suggestion buttons */}
           <div className="flex flex-wrap gap-2 mt-4">
             {suggestions.map((suggestion, index) => (

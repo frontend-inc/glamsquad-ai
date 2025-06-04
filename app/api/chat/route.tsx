@@ -108,8 +108,6 @@ export async function POST(req: Request) {
               startDateTime: datetime,
             });
 
-            console.log("Availability Data:", JSON.stringify(availabilityData));
-
             const hasAvailability = availabilityData?.data?.availableAppointmentServices?.appointmentService ? 
               true : false;
 
