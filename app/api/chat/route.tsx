@@ -55,7 +55,7 @@ export async function POST(req: Request) {
         }),
         execute: async ({ name }) => {
           return {
-            message: `Hello ${name}! How can I help?`,
+            message: `Hello ${name}! I was a tool invocation.`,
           }
         },
       },

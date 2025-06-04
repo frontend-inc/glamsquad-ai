@@ -9,29 +9,80 @@ interface MessageItemProps {
 }
 
 export function MessageItem({ message }: MessageItemProps) {
-  const renderAssistantMessage = (content: string) => {
-    try {
-      const parsedContent = parse(content);
-      
-      // Check if we have a valid message object
-      if (parsedContent && typeof parsedContent === 'object' && 'message' in parsedContent) {
-        const messageText = parsedContent.message as string;
-        
-        return (
-          <>
-            <div className="max-w-none">
-              {messageText}
-            </div>
-          </>
-        );
-      }
-    } catch (error) {
-      // If parsing fails, return the content as is
-    }
+  
+  const renderToolInvocationResult = (toolInvocation: any) => {
     
-    // Default fallback rendering
+    if (toolInvocation.state !== 'result' || !toolInvocation.result) {
+      return null;
+    }
+
+    switch (toolInvocation.toolName) {
+      case 'greetUser':
+        return (
+          <div className="max-w-none">
+            {toolInvocation.result.message}
+          </div>
+        );
+      case 'queryServices':
+        return (
+          <div className="max-w-none">
+            {toolInvocation.result.message}
+          </div>
+        );
+      default:
+        return (
+          <div className="max-w-none">
+            {JSON.stringify(toolInvocation.result)}
+          </div>
+        );
+    }
+  };
+
+  const renderAssistantMessage = (content: string) => {
+    // @ts-ignore
+    if (message?.parts && message.parts?.length > 0) {
+      return (
+        <>
+          {
+            // @ts-ignore
+            message.parts.map((part: any, index: number) => {
+            if (part.toolInvocation) {
+              return (
+                <div key={index}>
+                  {renderToolInvocationResult(part.toolInvocation)}
+                </div>
+              );
+            }
+            
+            if (part.type === 'text' && part.text) {
+              try {
+                const parsedContent = parse(part.text);
+                if (parsedContent && typeof parsedContent === 'object' && 'message' in parsedContent) {
+                  return (
+                    <div key={index} className="max-w-none">
+                      {parsedContent.message}
+                    </div>
+                  );
+                }
+              } catch (error) {
+                // If parsing fails, return the text as is
+                return (
+                  <div key={index} className="max-w-none">
+                    {part.text}
+                  </div>
+                );
+              }
+            }
+            
+            return null;
+          })}
+        </>
+      );
+    }
+
+    // If no parts, always display the content
     return (
-      <div className="prose prose-sm max-w-none">
+      <div className="max-w-none">
         {content}
       </div>
     );

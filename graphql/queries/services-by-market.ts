@@ -1,4 +1,23 @@
 const QUERY_SERVICES_BY_MARKET = `
+query GetServicesByMarket($marketId: String!) {
+  marketServices(where: { marketId: $marketId, isHidden: false, isClientBookable: true }) {
+    id
+    name
+    description
+    price
+    duration
+        
+    addOnMarketServices {
+      id
+      name
+      price
+      duration
+      isAddOn     
+    }
+  }
+}
+`
+const QUERY_SERVICES_BY_MARKET_EXTENDED = `
 query GetAvailableServicesByLocation($marketId: String!) {
   marketServices(where: { marketId: $marketId, isHidden: false, isClientBookable: true }) {
     id

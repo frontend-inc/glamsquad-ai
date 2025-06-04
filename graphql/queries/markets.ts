@@ -6,14 +6,9 @@ export const QUERY_MARKETS = `
     abbreviation
     shortName
     isEnabled
-  }
-  services {
-    id 
-    name 
-    description 
-    price 
-  }
+  }  
 }`;
+
 export const QUERY_MARKETS_EXTENDED = `
 {
   markets {
