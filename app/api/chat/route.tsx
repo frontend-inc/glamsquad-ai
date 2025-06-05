@@ -2,7 +2,7 @@ import { streamText, tool } from "ai"
 import { openai } from "@ai-sdk/openai"
 import { QUERY_MARKETS } from "@/graphql/queries/markets";
 import { QUERY_SERVICES_BY_MARKET } from "@/graphql/queries/services";
-import { QUERY_AVAILABILITY } from "@/graphql/queries/availability";
+import { QUERY_AVAILABILITY_IN_TIME_RANGE } from "@/graphql/queries/availability";
 import {
    QUERY_USER_BY_EMAIL,
    QUERY_USER_BY_PHONE 
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
         execute: async ({ serviceId, addOnServiceIds,street, apartment, city, state, zip, type, datetime }) => {
           
           try{
-            const availabilityData = await executeQuery(QUERY_AVAILABILITY, {  
+            const availabilityData = await executeQuery(QUERY_AVAILABILITY_IN_TIME_RANGE, {  
               baseServiceId: serviceId,
               addOnServiceIds: addOnServiceIds || [],
               address: {
@@ -110,13 +110,13 @@ export async function POST(req: Request) {
 
             console.log("Availability Data:", JSON.stringify(availabilityData, null, 2));
 
-            const hasAvailability = availabilityData?.data?.availableAppointmentServices?.appointmentService ? 
+            const hasAvailability = availabilityData?.data?.availableAppointmentServicesInTimeRange?.appointmentServices?.length > 0 ? 
               true : false;
 
             return {
               message: hasAvailability ? `Below are some available appointments` : 
                 `Sorry there is nothing available then, are you free another time?`,
-              availability: availabilityData?.data?.availableAppointmentServices || {},
+              availability: availabilityData?.data?.availableAppointmentServicesInTimeRange?.appointmentServices || [],
             }
           } catch (error) {
             console.error("Error querying availability:", error);
