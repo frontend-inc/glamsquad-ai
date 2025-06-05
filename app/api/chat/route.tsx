@@ -233,15 +233,16 @@ export async function POST(req: Request) {
       cancelAppointment: tool({
         description: "Cancel an existing appointment for a user",
         parameters: z.object({
-          appointmentId: z.string().describe("The appointment ID to cancel"),
-          cancellationReason: z.array(z.string()).describe("The reason for canceling the appointment")
+          emailOrPhone: z.string().describe("The email or phone number of the user to cancel the appointment for"),
+          appointmentId: z.string().describe("The appointment ID to cancel. Do not ask the user for this."),
+          cancellationReason: z.string().describe("The reason for canceling the appointment")
         }),
         execute: async ({ appointmentId, cancellationReason }) => {
 
           const appointmentData = await executeQuery(MUTATION_UPDATE_APPOINTMENT, { 
             appointmentId: appointmentId,
             appointment: {
-              isCancelled: true,
+              isCanceled: true,
               cancellationReason              
             } 
           })
@@ -256,7 +257,6 @@ export async function POST(req: Request) {
           }
           const cancelledAppointment = appointmentData?.data?.updateAppointment;
 
-          // Format the appointment start date in a user-friendly way
           const formattedStartDateTime = formatDate(cancelledAppointment.startDateTime);
 
           const fullAddress = formatAddress(cancelledAppointment.address);
