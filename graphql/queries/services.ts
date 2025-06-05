@@ -8,6 +8,10 @@ query GetServicesByMarket($marketId: String!) {
       description 
       price 
       duration
+
+      serviceType {
+        name
+      }
     
       addOnServices {
         id
