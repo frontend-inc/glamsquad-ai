@@ -34,7 +34,7 @@ export function ServicesGrid({ services, message }: ServicesGridProps) {
   return (
     <div className="w-full">
       {message && (
-        <p className="text-sm text-muted-foreground mb-4">{message}</p>
+        <p className="text-sm text-foreground mb-4">{message}</p>
       )}
       <div className="flex flex-col gap-2">
         {displayedServices.map((item) => (

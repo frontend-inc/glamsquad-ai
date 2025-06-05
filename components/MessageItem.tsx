@@ -165,8 +165,9 @@ export function MessageItem({ message }: MessageItemProps) {
       )}
       <div className={cn(
         "p-3 rounded-lg max-w-[80%]",
-        message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-gray-100 text-gray-900',        
-      )}>
+        message.role === 'user' ? 'bg-primary text-primary-foreground' : 'text-gray-900',        
+      )}
+      style={message.role === 'assistant' ? { backgroundColor: '#F9F4EE' } : undefined}>
         {message.role === 'user' ? 
           (message.content as string) : 
           renderAssistantMessage(message.content as string)

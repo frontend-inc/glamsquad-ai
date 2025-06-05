@@ -182,7 +182,7 @@ export async function POST(req: Request) {
           const servicesData = await executeQuery(QUERY_SERVICES_BY_MARKET, { marketId });
 
           return {
-            message: `Here are the services available`,
+            message: `Great, here is a list of services that we have- let me know if you have any questions.`,
             services: servicesData?.data?.marketServices || [], 
           }
         },
