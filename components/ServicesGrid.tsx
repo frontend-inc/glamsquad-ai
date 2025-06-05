@@ -12,6 +12,10 @@ interface ServiceItem {
     description: string;
     price: number;
     duration: number;
+    isAddOn?: boolean;
+    serviceType?: {
+      name: string;
+    };
     addOnServices: Array<{
       id: string;
       name: string;
@@ -28,13 +32,25 @@ interface ServicesGridProps {
 
 export function ServicesGrid({ services, message }: ServicesGridProps) {
   const [showAll, setShowAll] = useState(false);
-  const displayedServices = showAll ? services : services.slice(0, 10);
-  const hasMore = services.length > 10;
+  
+  // Filter out services where isAddOn is true or serviceType.name is 'Events' or 'Weddings'
+  const filteredServices = services.filter(item => {
+    const service = item.service;
+    // Filter out add-on services
+    if (service.isAddOn) return false;
+    // Filter out Events and Weddings services
+    if (service.serviceType?.name === 'Events') return false;
+    if (service.serviceType?.name === 'Weddings') return false;
+    return true;
+  });
+  
+  const displayedServices = showAll ? filteredServices : filteredServices.slice(0, 10);
+  const hasMore = filteredServices.length > 10;
 
   return (
     <div className="w-full">
       {message && (
-        <p className="text-sm text-foreground mb-4">{message}</p>
+        <p className="py-1 text-base text-foreground mb-4">{message}</p>
       )}
       <div className="flex flex-col gap-2">
         {displayedServices.map((item) => (
@@ -48,7 +64,7 @@ export function ServicesGrid({ services, message }: ServicesGridProps) {
             onClick={() => setShowAll(true)}
             className="w-full sm:w-auto"
           >
-            See all ({services.length - 10} more)
+            See all ({filteredServices.length - 10} more)
           </Button>
         </div>
       )}

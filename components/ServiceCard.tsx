@@ -18,7 +18,11 @@ interface Service {
   description: string;
   price: number;
   duration: number;
+  isAddOn?: boolean;
   addOnServices: AddOnService[];
+  serviceType?: {
+    name: string;
+  };
 }
 
 interface ServiceCardProps {

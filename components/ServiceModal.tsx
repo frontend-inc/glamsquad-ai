@@ -5,12 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Clock, ChevronDown, ChevronUp, Minus, Plus } from "lucide-react";
-import { 
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Clock, Minus, Plus } from "lucide-react";
 
 interface AddOnService {
   id: string;
@@ -26,7 +21,11 @@ interface Service {
   description: string;
   price: number;
   duration: number;
+  isAddOn?: boolean;
   addOnServices: AddOnService[];
+  serviceType?: {
+    name: string;
+  };
 }
 
 interface ServiceModalProps {
@@ -38,7 +37,6 @@ interface ServiceModalProps {
 export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
   const [clientCount, setClientCount] = useState(1);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   if (!service) return null;
 
@@ -75,6 +73,11 @@ export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
+          {service.serviceType && (
+            <Badge variant="secondary" className="w-fit mb-2">
+              {service.serviceType.name}
+            </Badge>
+          )}
           <DialogTitle className="text-2xl font-playfair text-secondary">
             {service.name}
           </DialogTitle>
@@ -131,7 +134,15 @@ export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
               <div className="space-y-3">
                 {service.addOnServices.map((addOn) => (
                   <div key={addOn.id} className="space-y-2">
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <Button
+                        variant={selectedAddOns.includes(addOn.id) ? "default" : "outline"}
+                        size="icon"
+                        className="h-8 w-8 rounded-full flex-shrink-0"
+                        onClick={() => toggleAddOn(addOn.id)}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <h4 className="font-medium font-playfair text-secondary">
@@ -148,14 +159,6 @@ export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
                         )}
                       </div>
                     </div>
-                    <Button
-                      variant={selectedAddOns.includes(addOn.id) ? "default" : "outline"}
-                      size="sm"
-                      className="w-full"
-                      onClick={() => toggleAddOn(addOn.id)}
-                    >
-                      {selectedAddOns.includes(addOn.id) ? "Added" : "Add"}
-                    </Button>
                   </div>
                 ))}
               </div>
@@ -163,18 +166,9 @@ export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
           )}
 
           {/* Details Section */}
-          <Collapsible open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-between p-0 h-auto">
-                <span className="font-medium">Details</span>
-                {isDetailsOpen ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-4 mt-4">
+          <div>
+            <h3 className="font-medium font-playfair text-secondary mb-4">Details</h3>
+            <div className="space-y-4">
               <div>
                 <h4 className="font-medium mb-2">What to expect:</h4>
                 <p className="text-sm text-muted-foreground">
@@ -187,8 +181,8 @@ export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
                   Shampoo 10-15 minutes before your appointment. Hair should be clean and damp (but not soaking wet) when your stylist arrives. Please have a place for your stylist to set up near an electrical outlet so they can plug in the necessary hot tools.
                 </p>
               </div>
-            </CollapsibleContent>
-          </Collapsible>
+            </div>
+          </div>
 
           {/* Total if add-ons are selected */}
           {selectedAddOns.length > 0 && (
