@@ -1,54 +1,70 @@
 "use client"
 
-import { signInAction } from "@/utils/ai"
-import { SubmitButton } from "@/components/submit-button"
+import { Button } from "@/components/ui/button"
 import { FormMessage } from "@/components/form-message"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-import OtpVerificationForm from "./otp-verification-form"
+import { LoaderIcon } from "lucide-react"
 
 type LoginFormProps = {
-  onForgotPassword: () => void
   onSuccess?: () => void
 }
 
-export default function LoginForm({ onForgotPassword, onSuccess }: LoginFormProps) {
+export default function LoginForm({ onSuccess }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError(null)
+    setSuccess(null)
+
     try {
-      setError(null)
-      setSuccess(null)
-      
-      // Add a flag to indicate this is a client-side request
-      formData.append("_client", "true")
-      
-      const result = await signInAction(formData)
-      
-      if (result && 'error' in result) {
-        setError(result.message || 'Sign in failed')
-        return
-      }
-      
-      if (result && 'success' in result) {
+      const response = await fetch("https://starbase-develop.glamsquad.com/api/v1/auth/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          grant_type: "password",
+          username: email,
+          password: password,
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+
+        console.log("Login successful:", data)
+        // Store the token in localStorage
+        localStorage.setItem("authToken", data.access_token)
+        localStorage.setItem("userEmail", email)
+        
+        setSuccess("You have been logged in successfully.")
+        
         if (onSuccess) {
           onSuccess()
-        } else {
-          window.location.href = "/protected"
         }
+        // Refresh the page to update the auth state
+        window.location.reload()
+      } else {
+        const errorData = await response.json()
+        setError(errorData.message || "Invalid email or password.")
       }
-    } catch (e) {
-      setError('An unexpected error occurred')
-      console.error(e)
+    } catch (error) {
+      setError("Failed to connect to the server. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <form action={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input 
@@ -78,19 +94,16 @@ export default function LoginForm({ onForgotPassword, onSuccess }: LoginFormProp
       {error && <FormMessage variant="error">{error}</FormMessage>}
       {success && <FormMessage variant="success">{success}</FormMessage>}
 
-      <div className="flex flex-col gap-2">
-        <SubmitButton pendingText="Signing in..." className="w-full">
-          Sign In
-        </SubmitButton>
-        
-        <button 
-          type="button"
-          onClick={onForgotPassword} 
-          className="text-xs text-foreground hover:text-muted-foreground underline mt-2 self-end"
-        >
-          Forgot Password?
-        </button>
-      </div>
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? (
+          <>
+            <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+            Signing in...
+          </>
+        ) : (
+          "Sign In"
+        )}
+      </Button>
     </form>
   )
 }

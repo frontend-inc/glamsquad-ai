@@ -2,7 +2,6 @@ const marketId= {
   "marketId": "2d72eae4-93c7-4daf-a8dc-e64caa952615"
 }
 
-
 const addOnServiceIds = {
  "addonId": "0b9cb93d-9438-41c2-8f8d-bc20120577a2"
 }
@@ -48,7 +47,6 @@ const messages = {
     "content": "What markets are you in?"
   }]
 }
-
 
 const messages1 = { 
   "messages": [{ 

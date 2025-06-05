@@ -1,61 +1,41 @@
-import { signOutAction } from "@/utils/ai";
-import { hasEnvVars } from "@/utils/supabase/check-env-vars";
-import { Badge } from "./ui/badge";
+"use client"
+
 import { Button } from "./ui/button";
-import { createClient } from "@/utils/supabase/server";
 import AuthButtonClient from "./auth/auth-button-client";
+import { useEffect, useState } from "react";
 
-export default async function AuthButton() {
-  const supabase = await createClient();
+export default function AuthButton() {
+  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    setIsClient(true);
+    const authToken = localStorage.getItem("authToken");
+    const userEmail = localStorage.getItem("userEmail");
+    
+    if (authToken && userEmail) {
+      setUser({ email: userEmail });
+    }
+  }, []);
 
-  if (!hasEnvVars) {
-    return (
-      <>
-        <div className="flex gap-4 items-center">
-          <div>
-            <Badge
-              variant={"default"}
-              className="font-normal pointer-events-none"
-            >
-              Please update .env.local file with anon key and url
-            </Badge>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant={"outline"}
-              disabled
-              className="opacity-75 cursor-none pointer-events-none"
-            >
-              Sign in
-            </Button>
-            <Button
-              size="sm"
-              variant={"default"}
-              disabled
-              className="opacity-75 cursor-none pointer-events-none"
-            >
-              Sign up
-            </Button>
-          </div>
-        </div>
-      </>
-    );
+  const handleSignOut = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userEmail");
+    setUser(null);
+    window.location.reload();
+  };
+
+  if (!isClient) {
+    return <AuthButtonClient />;
   }
   
   if (user) {
     return (
       <div className="flex items-center gap-4">
         {user.email}
-        <form action={signOutAction}>
-          <Button type="submit" variant={"outline"}>
-            Sign out
-          </Button>
-        </form>
+        <Button type="button" variant={"outline"} onClick={handleSignOut}>
+          Sign out
+        </Button>
       </div>
     );
   } 

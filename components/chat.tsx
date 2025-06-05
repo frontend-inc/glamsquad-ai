@@ -2,6 +2,7 @@
 
 import { generateId } from 'ai';
 import { useChat } from '@ai-sdk/react';
+import { useEffect, useRef } from 'react';
 import AboutCard from "@/components/cards/aboutcard";
 import { Messages } from "@/components/Messages";
 import { MessageInput } from "@/components/MessageInput";
@@ -10,6 +11,7 @@ import { MessageInput } from "@/components/MessageInput";
 export const maxDuration = 30;
 
 export default function Chat() {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const {
     isLoading,
@@ -25,6 +27,14 @@ export default function Chat() {
       console.log('Message finished:', message);
     }
   })
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSubmitInput = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,6 +61,7 @@ export default function Chat() {
       ) : (
         <Messages messages={messages} />
       )}
+      <div ref={messagesEndRef} />
       <MessageInput 
         input={input} 
         handleInputChange={handleInputChange} 

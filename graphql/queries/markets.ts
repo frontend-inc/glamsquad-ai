@@ -7,10 +7,6 @@ export const QUERY_MARKETS = `
     shortName
     isEnabled
   }  
-  service {
-    id 
-    name
-  }
 }`;
 
 export const QUERY_MARKETS_EXTENDED = `

@@ -1,17 +1,32 @@
-import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
-import { createClient } from "@/utils/supabase/server";
+"use client"
+
 import { InfoIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 
-export default async function ProtectedPage() {
-  const supabase = await createClient();
+export default function ProtectedPage() {
+  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    const authToken = localStorage.getItem("authToken");
+    const userEmail = localStorage.getItem("userEmail");
+    
+    if (!authToken || !userEmail) {
+      window.location.href = "/";
+      return;
+    }
+    
+    setUser({ email: userEmail });
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (!user) {
-    return redirect("/sign-in");
+    return null;
   }
 
   return (
@@ -23,7 +38,7 @@ export default async function ProtectedPage() {
         </div>
       </div>
       <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-2xl mb-4">Hey { user?.user_metadata?.name || user?.email }! </h2>
+        <h2 className="font-bold text-2xl mb-4">Hey {user.email}!</h2>
         <p className="text-sm text-foreground/70">You have successfully logged in.</p>
       </div>
     </div>

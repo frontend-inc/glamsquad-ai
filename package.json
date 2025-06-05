@@ -25,6 +25,8 @@
     "autoprefixer": "10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "graphql": "^16.11.0",
+    "graphql-request": "^7.2.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.484.0",
     "next": "latest",

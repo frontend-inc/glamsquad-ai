@@ -3,20 +3,15 @@
 import { useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import LoginForm from "./login-form"
-import SignupForm from "./signup-form"
-import ForgotPasswordForm from "./forgot-password-form"
 import { ThemeSwitcher } from "@/components/theme-switcher"
 
 type AuthModalProps = {
-  defaultTab?: "login" | "signup" | "forgot-password"
   triggerElement?: React.ReactNode
   onClose?: () => void
 }
 
-export default function AuthModal({ defaultTab = "login", triggerElement, onClose }: AuthModalProps) {
-  const [activeTab, setActiveTab] = useState<string>(defaultTab)
+export default function AuthModal({ triggerElement, onClose }: AuthModalProps) {
   const [open, setOpen] = useState(false)
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -36,62 +31,27 @@ export default function AuthModal({ defaultTab = "login", triggerElement, onClos
         <div className="flex gap-2 items-center">
           <ThemeSwitcher />
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm" onClick={() => setActiveTab("login")}>
+            <Button variant="outline" size="sm">
               Sign in
-            </Button>
-          </DialogTrigger>
-          <DialogTrigger asChild>
-            <Button size="sm" onClick={() => setActiveTab("signup")}>
-              Sign up
             </Button>
           </DialogTrigger>
         </div>
       )}
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>
-            {activeTab === "login" && "Sign in"}
-            {activeTab === "signup" && "Sign up"}
-            {activeTab === "forgot-password" && "Reset password"}
-          </DialogTitle>
+          <DialogTitle>Sign in</DialogTitle>
           <DialogDescription>
-            {activeTab === "login" && "Enter your credentials to sign in to your account."}
-            {activeTab === "signup" && "Create a new account to get started."}
-            {activeTab === "forgot-password" && "Enter your email to receive a password reset link."}
+            Enter your credentials to sign in to your account.
           </DialogDescription>
         </DialogHeader>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="signup">Sign up</TabsTrigger>
-          </TabsList>
-          <TabsContent value="login" className="mt-4">
-            <LoginForm 
-              onForgotPassword={() => setActiveTab("forgot-password")}
-              onSuccess={() => {
-                setOpen(false);
-                onClose?.();
-              }}
-            />
-          </TabsContent>
-          <TabsContent value="signup" className="mt-4">
-            <SignupForm 
-              onSuccess={() => {
-                setOpen(false);
-                onClose?.();
-              }} 
-            />
-          </TabsContent>
-          <TabsContent value="forgot-password" className="mt-4">
-            <ForgotPasswordForm 
-              onBackToLogin={() => setActiveTab("login")}
-              onSuccess={() => {
-                setOpen(false);
-                onClose?.();
-              }}
-            />
-          </TabsContent>
-        </Tabs>
+        <div className="mt-4">
+          <LoginForm 
+            onSuccess={() => {
+              setOpen(false);
+              onClose?.();
+            }}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )

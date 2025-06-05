@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import { parse } from 'partial-json';
 import { ServicesGrid } from './ServicesGrid';
 import { AvailabilityGrid } from './AvailabilityGrid';
+import { UserDetails } from './UserDetails';
+import { AppointmentDetails } from './AppointmentDetails';
 
 interface MessageItemProps {
   message: Message;
@@ -46,6 +48,45 @@ export function MessageItem({ message }: MessageItemProps) {
               availability={toolInvocation.result.availability} 
               message={toolInvocation.result.message}
             />
+          );
+        }
+        return (
+          <div className="max-w-none">
+            {toolInvocation.result.message}
+          </div>
+        );
+      case 'queryUserByEmail':
+      case 'queryUserByPhone':
+        if (toolInvocation.result.user) {
+          const users = Array.isArray(toolInvocation.result.user) 
+            ? toolInvocation.result.user 
+            : [toolInvocation.result.user];
+          
+          return (
+            <div className="space-y-4">
+              <div className="max-w-none">
+                {toolInvocation.result.message}
+              </div>
+              {users.map((user: any) => (
+                <UserDetails key={user.id} user={user} />
+              ))}
+            </div>
+          );
+        }
+        return (
+          <div className="max-w-none">
+            {toolInvocation.result.message}
+          </div>
+        );
+      case 'createAppointment':
+        if (toolInvocation.result.appointment) {
+          return (
+            <div className="space-y-4">
+              <div className="max-w-none">
+                {toolInvocation.result.message}
+              </div>
+              <AppointmentDetails appointment={toolInvocation.result.appointment} />
+            </div>
           );
         }
         return (
