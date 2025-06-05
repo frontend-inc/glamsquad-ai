@@ -7,6 +7,7 @@ import { ServicesGrid } from './ServicesGrid';
 import { AvailabilityGrid } from './AvailabilityGrid';
 import { UserDetails } from './UserDetails';
 import { AppointmentDetails } from './AppointmentDetails';
+import { AIAvatar } from './AIAvatar';
 
 interface MessageItemProps {
   message: Message;
@@ -157,6 +158,11 @@ export function MessageItem({ message }: MessageItemProps) {
       "whitespace-pre-wrap flex mb-5 w-full",
       message.role === 'user' ? 'justify-end' : 'justify-start'
     )}>
+      {message.role === 'assistant' && (
+        <div className="mr-3 flex-shrink-0">
+          <AIAvatar size="sm" className="mx-0" />
+        </div>
+      )}
       <div className={cn(
         "p-3 rounded-lg max-w-[80%]",
         message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-gray-100 text-gray-900',        

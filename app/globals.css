@@ -58,3 +58,18 @@
   --tw-ring-shadow: none !important;
   --tw-ring-color: transparent !important;
 }
+
+/* Glassmorphism effect */
+.glass-footer {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 -1px 20px rgba(0, 0, 0, 0.05);
+}
+
+.glass-header {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.05);
+}

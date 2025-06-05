@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Clock } from "lucide-react";
 
 interface AddOnService {
   id: string;
@@ -29,23 +29,29 @@ export function ServiceCard({ service }: ServiceCardProps) {
     return price === 0 ? "Free" : `$${price}`;
   };
 
+  const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (hours > 0 && mins > 0) return `${hours}h ${mins}m`;
+    if (hours > 0) return `${hours}h`;
+    return `${mins}m`;
+  };
+
   return (
     <Card className="hover:shadow-md transition-shadow">
       <div className="p-4">
-        <div className="flex items-center justify-between">
+        <div className="flex justify-between items-start gap-4">
           <div className="flex-1">
-            <h3 className="font-medium text-base text-secondary">{service.name}</h3>
-            {service.addOnServices.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
-                {service.addOnServices.map((addon) => (
-                  <Badge key={addon.id} variant="secondary" className="text-xs">
-                    {addon.name} • {formatPrice(addon.price)}
-                  </Badge>
-                ))}
-              </div>
+            <h3 className="font-medium text-lg text-secondary mb-1 font-playfair">{service.name}</h3>
+            {service.description && (
+              <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{service.description}</p>
             )}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span>{formatDuration(service.duration)}</span>
+            </div>
           </div>
-          <div className="ml-4">
+          <div className="text-right">
             <span className="text-lg font-semibold">{formatPrice(service.price)}</span>
           </div>
         </div>

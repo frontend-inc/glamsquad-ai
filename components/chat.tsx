@@ -55,19 +55,26 @@ export default function Chat() {
   }
   
   return (    
-    <div className="group w-full overflow-auto">
-      {messages.length <= 0 ? ( 
-        <AboutCard setInput={(text) => handleInputChange({ target: { value: text } } as React.ChangeEvent<HTMLInputElement>)} />  
-      ) : (
-        <Messages messages={messages} />
-      )}
-      <div ref={messagesEndRef} />
-      <MessageInput 
-        input={input} 
-        handleInputChange={handleInputChange} 
-        handleSubmit={handleSubmitInput} 
-        isDisabled={!input.trim()} 
-      />
-    </div>
+    <>
+      <div className="group w-full flex flex-col relative">
+        <div className="flex-1">
+          {messages.length <= 0 ? ( 
+            <AboutCard setInput={(text) => handleInputChange({ target: { value: text } } as React.ChangeEvent<HTMLInputElement>)} />  
+          ) : (
+            <Messages messages={messages} />
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+      
+      <div className="fixed bottom-0 left-0 right-0 glass-footer border-t border-gray-200/30 z-40">
+        <MessageInput 
+          input={input} 
+          handleInputChange={handleInputChange} 
+          handleSubmit={handleSubmitInput} 
+          isDisabled={!input.trim()} 
+        />
+      </div>
+    </>
   );
 }

@@ -55,7 +55,7 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-secondary">
+        <CardTitle className="flex items-center gap-2 text-secondary font-playfair">
           <CheckCircle className="h-5 w-5 text-green-600" />
           Appointment Confirmed
         </CardTitle>
@@ -64,7 +64,7 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
         <div className="flex items-center gap-2">
           <CalendarIcon className="h-4 w-4 text-muted-foreground" />
           <div>
-            <p className="font-semibold text-secondary">Date & Time</p>
+            <p className="font-semibold text-secondary font-playfair">Date & Time</p>
             <p className="text-sm text-muted-foreground">{formatDateTime(appointment.startDateTime)}</p>
           </div>
         </div>
@@ -72,7 +72,7 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
         <div className="flex items-center gap-2">
           <MapPin className="h-4 w-4 text-muted-foreground" />
           <div>
-            <p className="font-semibold text-secondary">Location</p>
+            <p className="font-semibold text-secondary font-playfair">Location</p>
             <p className="text-sm text-muted-foreground">
               {appointment.address.street}
             </p>
@@ -85,7 +85,7 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
         <div className="flex items-center gap-2">
           <DollarSign className="h-4 w-4 text-muted-foreground" />
           <div>
-            <p className="font-semibold text-secondary">Total</p>
+            <p className="font-semibold text-secondary font-playfair">Total</p>
             <p className="text-sm text-muted-foreground">
               {formatPrice(appointment.finalPrice || appointment.totalPrice)}
             </p>
@@ -94,7 +94,7 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
 
         {appointment.appointmentServices.length > 0 && (
           <div>
-            <p className="font-semibold mb-2 text-secondary">Services</p>
+            <p className="font-semibold mb-2 text-secondary font-playfair">Services</p>
             <div className="space-y-2">
               {appointment.appointmentServices.map((service) => (
                 <Badge key={service.id} variant="secondary" className="mr-2">

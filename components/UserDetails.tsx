@@ -31,14 +31,14 @@ export function UserDetails({ user }: UserDetailsProps) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-secondary">
+        <CardTitle className="flex items-center gap-2 text-secondary font-playfair">
           <User className="h-5 w-5" />
           User Details
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="font-semibold text-lg">
+          <h3 className="font-semibold text-lg font-playfair">
             {user.nameFirst} {user.nameLast}
           </h3>
         </div>
@@ -59,7 +59,7 @@ export function UserDetails({ user }: UserDetailsProps) {
 
         {user.addresses && user.addresses.length > 0 && (
           <div className="space-y-3">
-            <h4 className="font-semibold flex items-center gap-2 text-secondary">
+            <h4 className="font-semibold flex items-center gap-2 text-secondary font-playfair">
               <MapPin className="h-4 w-4" />
               Addresses
             </h4>
