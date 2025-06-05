@@ -8,6 +8,7 @@ import { AvailabilityGrid } from './AvailabilityGrid';
 import { UserDetails } from './UserDetails';
 import { AppointmentDetails } from './AppointmentDetails';
 import { AIAvatar } from './AIAvatar';
+import ReactMarkdown from 'react-markdown';
 
 interface MessageItemProps {
   message: Message;
@@ -80,6 +81,23 @@ export function MessageItem({ message }: MessageItemProps) {
           </div>
         );
       case 'createAppointment':
+      case 'updateAppointment':
+        if (toolInvocation.result.appointment) {
+          return (
+            <div className="space-y-4">
+              <div className="max-w-none">
+                {toolInvocation.result.message}
+              </div>
+              <AppointmentDetails appointment={toolInvocation.result.appointment} />
+            </div>
+          );
+        }
+        return (
+          <div className="max-w-none">
+            {toolInvocation.result.message}
+          </div>
+        );
+      case 'cancelAppointment':
         if (toolInvocation.result.appointment) {
           return (
             <div className="space-y-4">
@@ -125,8 +143,8 @@ export function MessageItem({ message }: MessageItemProps) {
                 const parsedContent = parse(part.text);
                 if (parsedContent && typeof parsedContent === 'object' && 'message' in parsedContent) {
                   return (
-                    <div key={index} className="max-w-none">
-                      {parsedContent.message}
+                    <div key={index} className="max-w-none prose prose-sm max-w-none text-foreground">
+                      <ReactMarkdown>{parsedContent.message}</ReactMarkdown>
                     </div>
                   );
                 }

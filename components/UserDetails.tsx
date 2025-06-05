@@ -63,11 +63,11 @@ export function UserDetails({ user }: UserDetailsProps) {
     }).format(price);
   };
 
-  // Filter upcoming appointments only
+  // Filter upcoming appointments only (exclude cancelled ones)
   const upcomingAppointments = user.appointments?.filter(appointment => {
     const appointmentDate = new Date(appointment.startDateTime);
     const now = new Date();
-    return appointmentDate > now;
+    return appointmentDate > now && !appointment.isCanceled;
   }) || [];
 
   return (

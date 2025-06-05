@@ -1,27 +1,25 @@
 export const MUTATION_CREATE_APPOINTMENT = `
-mutation CreateAppointmentWithBookingToken($appointment: AppointmentInput!) {
-  createAppointment(appointment: $appointment) {
-    id
-    startDateTime
-    totalPrice
-    finalPrice
-    bookingTokens
-    
-    address {
-      street
-      city
-      state
-    }
-    
-    appointmentServices {
+  mutation CreateAppointmentWithBookingToken($appointment: AppointmentInput!) {
+    createAppointment(appointment: $appointment) {
       id
-      bookingToken
-      service {
-        name
+      startDateTime
+      totalPrice
+      finalPrice
+      bookingTokens    
+      address {
+        street
+        city
+        state
+      }    
+      appointmentServices {
+        id
+        bookingToken
+        service {
+          name
+        }
       }
     }
   }
-}
 `
 
 export const MUTATION_UPDATE_APPOINTMENT = `

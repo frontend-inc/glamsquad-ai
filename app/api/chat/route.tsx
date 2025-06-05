@@ -64,8 +64,10 @@ export async function POST(req: Request) {
     
     You help customers find services and book appointments for hair, makeup, nails, and more.
     
-    Todays date in EST timezone is ${formattedDate}.
+    Always get the user's email or phone number to find their account first.
 
+    Todays date in EST timezone is ${formattedDate}.
+    
     Here is a JSON array of services and markets available:
     ${JSON.stringify(marketsData, null, 2)}
 
@@ -202,22 +204,32 @@ export async function POST(req: Request) {
         }),
         execute: async ({ startDateTime, bookingTokens, addressId, userId }) => {
 
-          const availabilityData = await executeQuery(MUTATION_CREATE_APPOINTMENT, { appointment: {
-            startDateTime: startDateTime,
-            bookingTokens: bookingTokens,
-            addressId: addressId,
-            creatorId: userId,
-            ownerId: userId
+          console.log("Creating appointment with data:", {
+            startDateTime,
+            bookingTokens,
+            addressId,
+            userId
+          });
+
+          const createAppointmentData = await executeQuery(MUTATION_CREATE_APPOINTMENT, { 
+            appointment: {
+              startDateTime: startDateTime,
+              bookingTokens: bookingTokens,
+              addressId: addressId,
+              creatorId: userId,
+              ownerId: userId
             } 
           })
 
-          if (!availabilityData?.data?.createAppointment) {
+          console.log("Create Appointment Data:", JSON.stringify(createAppointmentData, null, 2));
+
+          if (!createAppointmentData?.data?.createAppointment) {
             return {
               message: `There was an error creating the appointment. Please try again later.`,
               appointment: null,
             }
           }
-          const createdAppointment = availabilityData.data.createAppointment;
+          const createdAppointment = createAppointmentData.data.createAppointment;
 
           // Format the appointment start date in a user-friendly way
           const formattedStartDateTime = formatDate(createdAppointment.startDateTime);
@@ -230,12 +242,52 @@ export async function POST(req: Request) {
           }
         },
       }),
+      updateAppointment: tool({
+        description: "Update an appointment for a user",
+        parameters: z.object({
+          emailOrPhone: z.string().describe("The email or phone number of the user to cancel the appointment for"),
+          appointmentId: z.string().describe("The appointment ID to cancel. Do not ask the user for this."),
+          startDateTime: z.string().describe("The start date and time of the appointment in YYYY-MM-DDTHH:mm:ss.sssZ format"),
+          bookingTokens: z.array(z.string()).describe("An array of booking tokens for the appointment"),
+          addressId: z.string().describe("The street address for the appointment"),
+        }),
+        execute: async ({ appointmentId, startDateTime, bookingTokens, addressId }) => {
+
+          const appointmentData = await executeQuery(MUTATION_UPDATE_APPOINTMENT, { 
+            appointmentId: appointmentId,
+            appointment: {
+              startDateTime: startDateTime,
+              bookingTokens: bookingTokens,
+              addressId: addressId            
+            } 
+          })
+
+          console.log("Updated Appointment Data:", JSON.stringify(appointmentData, null, 2));
+
+          if (!appointmentData?.data?.updateAppointment) {
+            return {
+              message: `There was an error udpating the appointment. Please try again later.`,
+              appointment: null,
+            }
+          }
+          const updatedAppointment = appointmentData?.data?.updateAppointment;
+
+          const formattedStartDateTime = formatDate(updatedAppointment.startDateTime);
+
+          const fullAddress = formatAddress(updatedAppointment.address);
+
+          return {
+            message: `Appointment for ${formattedStartDateTime} at ${fullAddress} has been cancelled.`,
+            appointment: updatedAppointment,
+          }
+        },
+      }),
       cancelAppointment: tool({
         description: "Cancel an existing appointment for a user",
         parameters: z.object({
           emailOrPhone: z.string().describe("The email or phone number of the user to cancel the appointment for"),
           appointmentId: z.string().describe("The appointment ID to cancel. Do not ask the user for this."),
-          cancellationReason: z.string().describe("The reason for canceling the appointment")
+          cancellationReason: z.string().describe("The reason for canceling the appointment")          
         }),
         execute: async ({ appointmentId, cancellationReason }) => {
 

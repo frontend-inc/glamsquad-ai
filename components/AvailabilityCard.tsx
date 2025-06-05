@@ -33,6 +33,7 @@ export function AvailabilityCard({ slot }: AvailabilityCardProps) {
     });
   };
 
+
   const formatDuration = (minutes: number) => {
     const actualDuration = slot.customDuration || minutes;
     const hours = Math.floor(actualDuration / 60);

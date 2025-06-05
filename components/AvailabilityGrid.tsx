@@ -25,8 +25,20 @@ interface AvailabilityGridProps {
 
 export function AvailabilityGrid({ availability, message }: AvailabilityGridProps) {
   // Handle both array and legacy single object formats
-  const slots = Array.isArray(availability) ? availability : 
+  const rawSlots = Array.isArray(availability) ? availability : 
     (availability?.appointmentService ? [availability.appointmentService] : []);
+
+  // Sort slots by startDateTime (earliest first)
+  const sortedSlots = rawSlots.sort((a, b) => {
+    const dateA = new Date(a.startDateTime);
+    const dateB = new Date(b.startDateTime);
+    return dateA.getTime() - dateB.getTime();
+  });
+
+  // Remove duplicates with the same startDateTime
+  const slots = sortedSlots.filter((slot, index, array) => {
+    return index === 0 || slot.startDateTime !== array[index - 1].startDateTime;
+  });
 
   return (
     <div className="w-full">
