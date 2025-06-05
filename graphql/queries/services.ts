@@ -156,7 +156,7 @@ query GetAllServices {
     duration
     image
     thumbnailImage
-    isAddOn
+    isAddOn    
 
     # Add-on services relationships
     addOnServices {
