@@ -151,8 +151,8 @@ export function MessageItem({ message }: MessageItemProps) {
               } catch (error) {
                 // If parsing fails, return the text as is
                 return (
-                  <div key={index} className="max-w-none">
-                    {part.text}
+                  <div key={index} className="max-w-none prose prose-sm max-w-none text-foreground">
+                    <ReactMarkdown>{part.text}</ReactMarkdown>
                   </div>
                 );
               }
@@ -166,8 +166,8 @@ export function MessageItem({ message }: MessageItemProps) {
 
     // If no parts, always display the content
     return (
-      <div className="max-w-none">
-        {content}
+      <div className="max-w-none prose prose-sm max-w-none text-foreground">
+        <ReactMarkdown>{content}</ReactMarkdown>
       </div>
     );
   };
