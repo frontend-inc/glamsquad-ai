@@ -216,8 +216,31 @@ export async function POST(req: Request) {
             }
           }
           const createdAppointment = availabilityData.data.createAppointment;
+
+          // Format the appointment start date in a user-friendly way
+          const appointmentDate = new Date(createdAppointment.startDateTime);
+          const options: Intl.DateTimeFormatOptions = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: 'America/New_York', // Ensure the date is in EST timezone
+          };
+          const formattedStartDateTime = appointmentDate.toLocaleString('en-US', options);
+
+          const fullAddress = [
+            createdAppointment.address.street,
+            createdAppointment.address.apartment ? `Apt ${createdAppointment.address.apartment}` : null,
+            createdAppointment.address.city,
+            createdAppointment.address.state,
+            createdAppointment.address.zip
+          ].filter(Boolean) // Filter out any null values         
+          .join(', ')
+
           return {
-            message: `Appointment created successfully for ${createdAppointment.startDateTime} at ${createdAppointment.address.street}, ${createdAppointment.address.city}, ${createdAppointment.address.state}.`,
+            message: `Appointment is scheduled for ${formattedStartDateTime} at ${fullAddress}.`,
             appointment: createdAppointment,
           }
         },
