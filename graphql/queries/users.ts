@@ -16,6 +16,19 @@ export const QUERY_USER_BY_PHONE = `
         zip
         type       
       }
+      appointments {
+        id 
+        startDateTime
+        endDateTime
+        isCanceled        
+        appointmentServices {
+          service {
+            id 
+            name
+            price
+          }
+        } 
+      }
     }  
   }
   `;
@@ -37,6 +50,19 @@ export const QUERY_USER_BY_PHONE = `
         apartment
         zip
         type       
+      }
+      appointments {
+        id 
+        startDateTime
+        endDateTime
+        isCanceled        
+        appointmentServices {
+          service {
+            id 
+            name
+            price
+          }
+        } 
       }
     }  
   }

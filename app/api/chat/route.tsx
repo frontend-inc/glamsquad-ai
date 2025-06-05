@@ -8,8 +8,10 @@ import {
    QUERY_USER_BY_PHONE 
 } from "@/graphql/queries/users";
 import {
+  MUTATION_UPDATE_APPOINTMENT,
   MUTATION_CREATE_APPOINTMENT 
 } from "@/graphql/mutations/appointments";
+import { formatDate, formatAddress } from "@/lib/utils";
 import { z } from "zod";
 
 export async function executeQuery(query: any, variables: any ) {
@@ -218,30 +220,50 @@ export async function POST(req: Request) {
           const createdAppointment = availabilityData.data.createAppointment;
 
           // Format the appointment start date in a user-friendly way
-          const appointmentDate = new Date(createdAppointment.startDateTime);
-          const options: Intl.DateTimeFormatOptions = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-            timeZone: 'America/New_York', // Ensure the date is in EST timezone
-          };
-          const formattedStartDateTime = appointmentDate.toLocaleString('en-US', options);
+          const formattedStartDateTime = formatDate(createdAppointment.startDateTime);
 
-          const fullAddress = [
-            createdAppointment.address.street,
-            createdAppointment.address.apartment ? `Apt ${createdAppointment.address.apartment}` : null,
-            createdAppointment.address.city,
-            createdAppointment.address.state,
-            createdAppointment.address.zip
-          ].filter(Boolean) // Filter out any null values         
-          .join(', ')
+          const fullAddress = formatAddress(createdAppointment.address);
 
           return {
             message: `Appointment is scheduled for ${formattedStartDateTime} at ${fullAddress}.`,
             appointment: createdAppointment,
+          }
+        },
+      }),
+      cancelAppointment: tool({
+        description: "Cancel an existing appointment for a user",
+        parameters: z.object({
+          appointmentId: z.string().describe("The appointment ID to cancel"),
+          cancellationReason: z.array(z.string()).describe("The reason for canceling the appointment")
+        }),
+        execute: async ({ appointmentId, cancellationReason }) => {
+
+          const appointmentData = await executeQuery(MUTATION_UPDATE_APPOINTMENT, { 
+            appointmentId: appointmentId,
+            appointment: {
+              isCancelled: true,
+              cancellationReason              
+            } 
+          })
+
+          console.log("Appointment Data:", JSON.stringify(appointmentData, null, 2));
+
+          if (!appointmentData?.data?.updateAppointment) {
+            return {
+              message: `There was an error udpating the appointment. Please try again later.`,
+              appointment: null,
+            }
+          }
+          const cancelledAppointment = appointmentData?.data?.updateAppointment;
+
+          // Format the appointment start date in a user-friendly way
+          const formattedStartDateTime = formatDate(cancelledAppointment.startDateTime);
+
+          const fullAddress = formatAddress(cancelledAppointment.address);
+
+          return {
+            message: `Appointment for ${formattedStartDateTime} at ${fullAddress} has been cancelled.`,
+            appointment: cancelledAppointment,
           }
         },
       }),
