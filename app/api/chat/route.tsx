@@ -108,12 +108,14 @@ export async function POST(req: Request) {
               startDateTime: datetime,
             });
 
+            console.log("Availability Data:", JSON.stringify(availabilityData, null, 2));
+
             const hasAvailability = availabilityData?.data?.availableAppointmentServices?.appointmentService ? 
               true : false;
 
             return {
-              message: hasAvailability ? `Below is a list of available appointments` : 
-                `There are no available appointments for the service at this time. Please choose another time.`,
+              message: hasAvailability ? `Below are some available appointments` : 
+                `Sorry there is nothing available then, are you free another time?`,
               availability: availabilityData?.data?.availableAppointmentServices || {},
             }
           } catch (error) {

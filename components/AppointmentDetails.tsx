@@ -53,64 +53,47 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-secondary font-playfair">
-          <CheckCircle className="h-5 w-5 text-green-600" />
-          Appointment Confirmed
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center gap-2">
-          <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-          <div>
-            <p className="font-semibold text-secondary font-playfair">Date & Time</p>
-            <p className="text-sm text-muted-foreground">{formatDateTime(appointment.startDateTime)}</p>
-          </div>
-        </div>
+    <Card className="hover:shadow-md transition-shadow">
+      <div className="p-4">
+        <div className="flex justify-between items-start gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <h3 className="font-medium text-lg text-secondary font-playfair">Appointment Confirmed</h3>
+            </div>
+            
+            <div className="space-y-1 mb-2">
+              <p className="text-sm text-muted-foreground">
+                {formatDateTime(appointment.startDateTime)}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {appointment.address.street}, {appointment.address.city}, {appointment.address.state}
+              </p>
+            </div>
 
-        <div className="flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-muted-foreground" />
-          <div>
-            <p className="font-semibold text-secondary font-playfair">Location</p>
-            <p className="text-sm text-muted-foreground">
-              {appointment.address.street}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {appointment.address.city}, {appointment.address.state}
-            </p>
-          </div>
-        </div>
+            {appointment.appointmentServices.length > 0 && (
+              <div className="flex flex-wrap gap-1 mb-2">
+                {appointment.appointmentServices.map((service) => (
+                  <Badge key={service.id} variant="secondary" className="text-xs">
+                    {service.service.name}
+                  </Badge>
+                ))}
+              </div>
+            )}
 
-        <div className="flex items-center gap-2">
-          <DollarSign className="h-4 w-4 text-muted-foreground" />
-          <div>
-            <p className="font-semibold text-secondary font-playfair">Total</p>
-            <p className="text-sm text-muted-foreground">
-              {formatPrice(appointment.finalPrice || appointment.totalPrice)}
-            </p>
-          </div>
-        </div>
-
-        {appointment.appointmentServices.length > 0 && (
-          <div>
-            <p className="font-semibold mb-2 text-secondary font-playfair">Services</p>
-            <div className="space-y-2">
-              {appointment.appointmentServices.map((service) => (
-                <Badge key={service.id} variant="secondary" className="mr-2">
-                  {service.service.name}
-                </Badge>
-              ))}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <CalendarIcon className="h-4 w-4" />
+              <span>ID: {appointment.id.substring(0, 8)}</span>
             </div>
           </div>
-        )}
-
-        <div className="pt-2 border-t">
-          <p className="text-xs text-muted-foreground">
-            Appointment ID: {appointment.id}
-          </p>
+          
+          <div className="text-right">
+            <span className="text-lg font-semibold">
+              {formatPrice(appointment.finalPrice || appointment.totalPrice)}
+            </span>
+          </div>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

@@ -27,7 +27,7 @@ export function AvailabilityGrid({ availability, message }: AvailabilityGridProp
   return (
     <div className="w-full">
       {message && (
-        <p className="text-sm text-muted-foreground mb-4">{message}</p>
+        <p className="text-base text-foreground mb-4">{message}</p>
       )}
       {availability?.appointmentService && (
         <AvailabilityCard slot={availability.appointmentService} />
