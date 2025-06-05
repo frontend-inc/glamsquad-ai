@@ -187,7 +187,6 @@ export async function POST(req: Request) {
         execute: async ({ marketId }) => {
           const servicesData = await executeQuery(QUERY_SERVICES_BY_MARKET, { marketId });
 
-          console.log("Services Data:", JSON.stringify(servicesData, null, 2));
           return {
             message: `Here is a list of services that we have- let me know if you have any questions.`,
             services: servicesData?.data?.marketServices || [], 

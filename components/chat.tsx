@@ -53,6 +53,14 @@ export default function Chat() {
       ]);
     }
   }
+
+  const handleSendMessage = async (message: string) => {
+    // Set the input value
+    handleInputChange({ target: { value: message } } as React.ChangeEvent<HTMLInputElement>);
+    
+    // Submit the form
+    await handleSubmit();
+  }
   
   return (    
     <>
@@ -61,7 +69,7 @@ export default function Chat() {
           {messages.length <= 0 ? ( 
             <AboutCard setInput={(text) => handleInputChange({ target: { value: text } } as React.ChangeEvent<HTMLInputElement>)} />  
           ) : (
-            <Messages messages={messages} />
+            <Messages messages={messages} onSendMessage={handleSendMessage} />
           )}
           <div ref={messagesEndRef} />
         </div>

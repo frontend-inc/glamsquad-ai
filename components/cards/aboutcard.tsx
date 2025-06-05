@@ -10,8 +10,10 @@ import { AIAvatar } from "@/components/AIAvatar";
 
 // Suggestion array with key-value pairs
 const suggestions = [
-  { key: "Markets", value: "What markets are you in?" },
-  { key: "Services", value: "What services do you offer?" },
+  { key: "Book Makeup", value: "Book Makeup" },
+  { key: "Book Hair", value: "Book Hair" },
+  { key: "Book Nails", value: "Book Nails" },
+  { key: "Update Appointment", value: "Update Appointment" },
 ];
 
 interface AboutCardProps {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -32,10 +32,10 @@ interface ServiceModalProps {
   service: Service | null;
   isOpen: boolean;
   onClose: () => void;
+  onSendMessage?: (message: string) => void;
 }
 
-export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
-  const [clientCount, setClientCount] = useState(1);
+export function ServiceModal({ service, isOpen, onClose, onSendMessage }: ServiceModalProps) {
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
 
   if (!service) return null;
@@ -61,12 +61,33 @@ export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
   };
 
   const calculateTotal = () => {
-    const basePrice = service.price * clientCount;
+    const basePrice = service.price;
     const addOnPrice = selectedAddOns.reduce((total, addOnId) => {
       const addOn = service.addOnServices.find(a => a.id === addOnId);
-      return total + (addOn ? addOn.price * clientCount : 0);
+      return total + (addOn ? addOn.price : 0);
     }, 0);
     return basePrice + addOnPrice;
+  };
+
+  const handleAddService = () => {
+    if (!onSendMessage) return;
+    
+    const selectedAddOnNames = selectedAddOns.map(addOnId => {
+      const addOn = service.addOnServices.find(a => a.id === addOnId);
+      return addOn?.name;
+    }).filter(Boolean);
+    
+    let message = `Book the ${service.name}`;
+    
+    if (selectedAddOnNames.length > 0) {
+      const addOnText = selectedAddOnNames.length === 1 
+        ? selectedAddOnNames[0]
+        : selectedAddOnNames.slice(0, -1).join(', ') + ' and ' + selectedAddOnNames.slice(-1);
+      message += ` with the addons ${addOnText}`;
+    }
+    
+    onSendMessage(message);
+    onClose();
   };
 
   return (
@@ -95,35 +116,6 @@ export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
             {service.description}
           </p>
 
-          {/* Client Count */}
-          <div>
-            <label className="text-sm font-medium">How many clients?</label>
-            <div className="flex items-center gap-3 mt-2">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setClientCount(Math.max(1, clientCount - 1))}
-                disabled={clientCount <= 1}
-              >
-                <Minus className="h-4 w-4" />
-              </Button>
-              <span className="min-w-[2rem] text-center">{clientCount}</span>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setClientCount(clientCount + 1)}
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Add Service Button */}
-          <Button className="w-full" size="lg">
-            Add Service
-          </Button>
 
           {/* Add-ons Section */}
           {service.addOnServices.length > 0 && (
@@ -184,18 +176,13 @@ export function ServiceModal({ service, isOpen, onClose }: ServiceModalProps) {
             </div>
           </div>
 
-          {/* Total if add-ons are selected */}
-          {selectedAddOns.length > 0 && (
-            <div className="border-t pt-4">
-              <div className="flex justify-between items-center">
-                <span className="font-medium">Total:</span>
-                <span className="text-xl font-semibold">
-                  {formatPrice(calculateTotal())}
-                </span>
-              </div>
-            </div>
-          )}
         </div>
+        
+        <DialogFooter className="mt-6">
+          <Button className="w-full" size="lg" onClick={handleAddService}>
+            Add Service • {formatPrice(calculateTotal())}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

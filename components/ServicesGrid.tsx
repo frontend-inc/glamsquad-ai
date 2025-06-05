@@ -28,9 +28,10 @@ interface ServiceItem {
 interface ServicesGridProps {
   services: ServiceItem[];
   message?: string;
+  onSendMessage?: (message: string) => void;
 }
 
-export function ServicesGrid({ services, message }: ServicesGridProps) {
+export function ServicesGrid({ services, message, onSendMessage }: ServicesGridProps) {
   const [showAll, setShowAll] = useState(false);
   
   // Filter out services where isAddOn is true or serviceType.name is 'Events' or 'Weddings'
@@ -54,7 +55,7 @@ export function ServicesGrid({ services, message }: ServicesGridProps) {
       )}
       <div className="flex flex-col gap-2">
         {displayedServices.map((item) => (
-          <ServiceCard key={item.id} id={item.id} service={item.service} />
+          <ServiceCard key={item.id} id={item.id} service={item.service} onSendMessage={onSendMessage} />
         ))}
       </div>
       {hasMore && !showAll && (

@@ -8,13 +8,15 @@ import { AvailabilityGrid } from './AvailabilityGrid';
 import { UserDetails } from './UserDetails';
 import { AppointmentDetails } from './AppointmentDetails';
 import { AIAvatar } from './AIAvatar';
+import { LoadingDots } from './LoadingDots';
 import ReactMarkdown from 'react-markdown';
 
 interface MessageItemProps {
   message: Message;
+  onSendMessage?: (message: string) => void;
 }
 
-export function MessageItem({ message }: MessageItemProps) {
+export function MessageItem({ message, onSendMessage }: MessageItemProps) {
   
   const renderToolInvocationResult = (toolInvocation: any) => {
     
@@ -35,6 +37,7 @@ export function MessageItem({ message }: MessageItemProps) {
             <ServicesGrid 
               services={toolInvocation.result.services} 
               message={toolInvocation.result.message}
+              onSendMessage={onSendMessage}
             />
           );
         }
@@ -123,6 +126,7 @@ export function MessageItem({ message }: MessageItemProps) {
   };
 
   const renderAssistantMessage = (content: string) => {
+    
     // @ts-ignore
     if (message?.parts && message.parts?.length > 0) {
       return (
@@ -143,7 +147,7 @@ export function MessageItem({ message }: MessageItemProps) {
                 const parsedContent = parse(part.text);
                 if (parsedContent && typeof parsedContent === 'object' && 'message' in parsedContent) {
                   return (
-                    <div key={index} className="max-w-none prose prose-sm max-w-none text-foreground">
+                    <div key={index} className="max-w-none text-foreground">
                       <ReactMarkdown>{parsedContent.message}</ReactMarkdown>
                     </div>
                   );
@@ -151,7 +155,7 @@ export function MessageItem({ message }: MessageItemProps) {
               } catch (error) {
                 // If parsing fails, return the text as is
                 return (
-                  <div key={index} className="max-w-none prose prose-sm max-w-none text-foreground">
+                  <div key={index} className="max-w-none text-foreground">
                     <ReactMarkdown>{part.text}</ReactMarkdown>
                   </div>
                 );
@@ -166,7 +170,7 @@ export function MessageItem({ message }: MessageItemProps) {
 
     // If no parts, always display the content
     return (
-      <div className="max-w-none prose prose-sm max-w-none text-foreground">
+      <div className="max-w-none text-foreground">
         <ReactMarkdown>{content}</ReactMarkdown>
       </div>
     );

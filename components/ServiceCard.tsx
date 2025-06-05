@@ -28,9 +28,10 @@ interface Service {
 interface ServiceCardProps {
   id: string;
   service: Service;
+  onSendMessage?: (message: string) => void;
 }
 
-export function ServiceCard({ service }: ServiceCardProps) {
+export function ServiceCard({ service, onSendMessage }: ServiceCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const formatPrice = (price: number) => {
@@ -74,6 +75,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
         service={service}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSendMessage={onSendMessage}
       />
     </>
   );
