@@ -13,8 +13,9 @@ import {
 import { z } from "zod";
 
 export async function executeQuery(query: any, variables: any ) {
+  const GLAMSQUAD_API_URL = process.env.GLAMSQUAD_API_URL as string 
   try {
-    const response = await fetch("https://starbase-develop.glamsquad.com/api/v1/graphql", {
+    const response = await fetch(GLAMSQUAD_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
