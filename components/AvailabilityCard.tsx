@@ -49,7 +49,7 @@ export function AvailabilityCard({ slot }: AvailabilityCardProps) {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
-              <span className="font-medium">{formatTime(slot.startDateTime)}</span>
+              <span className="font-medium text-secondary">{formatTime(slot.startDateTime)}</span>
             </div>
             <div className="text-sm text-muted-foreground">
               {formatDuration(slot.duration)}

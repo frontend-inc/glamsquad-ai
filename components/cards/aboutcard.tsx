@@ -33,8 +33,8 @@ export default function AboutCard({ setInput }: AboutCardProps) {
           <div className="flex justify-center mb-4">
             <AIAvatar />
           </div>
-          <CardTitle className="font-bold text-4xl text-center">How can I help you today?</CardTitle>
-          <CardDescription>Book and modify Glamsquad appointments in your market</CardDescription>
+          <CardTitle className="font-bold text-4xl text-center text-secondary">How can I help you today?</CardTitle>
+          <CardDescription className='text-center'>Ask questions, book a service, or update your appointment with our Glamsquad AI.</CardDescription>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground/90 leading-normal">         
           {/* Suggestion buttons */}

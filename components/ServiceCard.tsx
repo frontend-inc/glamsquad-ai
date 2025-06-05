@@ -34,7 +34,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
       <div className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <h3 className="font-medium text-base">{service.name}</h3>
+            <h3 className="font-medium text-base text-secondary">{service.name}</h3>
             {service.addOnServices.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-2">
                 {service.addOnServices.map((addon) => (

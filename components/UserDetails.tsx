@@ -31,7 +31,7 @@ export function UserDetails({ user }: UserDetailsProps) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-secondary">
           <User className="h-5 w-5" />
           User Details
         </CardTitle>
@@ -59,7 +59,7 @@ export function UserDetails({ user }: UserDetailsProps) {
 
         {user.addresses && user.addresses.length > 0 && (
           <div className="space-y-3">
-            <h4 className="font-semibold flex items-center gap-2">
+            <h4 className="font-semibold flex items-center gap-2 text-secondary">
               <MapPin className="h-4 w-4" />
               Addresses
             </h4>
@@ -80,7 +80,7 @@ function AddressCard({ address }: { address: Address }) {
     <Card className="p-3">
       <div className="space-y-1">
         {address.type && (
-          <Badge variant="outline" className="mb-2">
+          <Badge variant="secondary" className="mb-2">
             {address.type}
           </Badge>
         )}
