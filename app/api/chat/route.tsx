@@ -144,7 +144,7 @@ export async function POST(req: Request) {
           const user = userData.data.user;
 
           return {
-            message: `User found: ${user.nameFirst} ${user.nameLast} (${user.email})`,
+            message: `I found your account by email`,
             user: user,
           }          
         }
@@ -168,7 +168,7 @@ export async function POST(req: Request) {
           const user = userData.data.user;
 
           return {
-            message: `User found: ${user.nameFirst} ${user.nameLast} (${user.email})`,
+            message: `I found your account by phone`,
             user: user,
           }          
         }

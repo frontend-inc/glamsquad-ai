@@ -1,8 +1,8 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { User, Mail, Phone, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 interface Address {
   id: string;
@@ -31,31 +31,11 @@ export function UserDetails({ user }: UserDetailsProps) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-secondary font-playfair">
-          <User className="h-5 w-5" />
-          User Details
-        </CardTitle>
+        <h2 className="text-xl font-semibold text-secondary font-playfair">
+          {user.nameFirst} {user.nameLast}
+        </h2>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
-          <h3 className="font-semibold text-lg font-playfair">
-            {user.nameFirst} {user.nameLast}
-          </h3>
-        </div>
-        
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm">
-            <Mail className="h-4 w-4 text-muted-foreground" />
-            <span>{user.email}</span>
-          </div>
-          
-          {user.phone && (
-            <div className="flex items-center gap-2 text-sm">
-              <Phone className="h-4 w-4 text-muted-foreground" />
-              <span>{user.phone}</span>
-            </div>
-          )}
-        </div>
 
         {user.addresses && user.addresses.length > 0 && (
           <div className="space-y-3">

@@ -23,3 +23,42 @@ mutation CreateAppointmentWithBookingToken($appointment: AppointmentInput!) {
   }
 }
 `
+
+export const MUTATION_UPDATE_APPOINTMENT = `
+mutation UpdateAppointment($appointmentId: String!, $appointment: AppointmentInput!) {
+  updateAppointment(id: $appointmentId, appointment: $appointment) {
+    id
+    startDateTime
+    endDateTime
+    isCanceled
+    canceledAt
+    cancellationInitiatedBy
+    cancellationResolution
+    totalPrice
+    finalPrice
+    creditsApplied
+    
+    address {
+      street
+      city
+      state
+      zip
+    }
+    
+    owner {
+      id
+      nameFirst
+      nameLast
+      email
+    }
+    
+    appointmentServices {
+      id
+      service {
+        name
+      }
+      cancellationReason
+      cancellationResolution
+    }
+  }
+}`
