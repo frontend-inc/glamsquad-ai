@@ -49,7 +49,7 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD'
-    }).format(price / 100);
+    }).format(price);
   };
 
   return (
