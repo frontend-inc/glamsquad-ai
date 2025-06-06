@@ -13,29 +13,7 @@ import {
 } from "@/graphql/mutations/appointments";
 import { formatDate, formatAddress } from "@/lib/utils";
 import { z } from "zod";
-
-export async function executeQuery(query: any, variables: any ) {
-  const GLAMSQUAD_API_URL = process.env.GLAMSQUAD_API_URL as string 
-  try {
-    const response = await fetch(GLAMSQUAD_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.JWT_TOKEN}`, 
-      },
-      body: JSON.stringify({
-        query,
-        variables
-      })
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error;
-  }
-}
-
+import { executeQuery } from "@/services/glamsquad/client";
 
 export async function POST(req: Request) {
 

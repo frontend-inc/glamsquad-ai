@@ -25,7 +25,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
     setSuccess(null)
 
     try {
-      const response = await fetch("https://starbase-develop.glamsquad.com/api/v1/auth/token", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
         window.location.reload()
       } else {
         const errorData = await response.json()
-        setError(errorData.message || "Invalid email or password.")
+        setError(errorData.error || errorData.message || "Invalid email or password.")
       }
     } catch (error) {
       setError("Failed to connect to the server. Please try again.")
