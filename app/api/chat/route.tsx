@@ -265,7 +265,7 @@ export async function POST(req: Request) {
 
           if (!appointmentData?.data?.updateAppointment) {
             return {
-              message: `There was an error udpating the appointment. Please try again later.`,
+              message: `There was an error updating the appointment. Please try again later.`,
               appointment: null,
             }
           }
@@ -298,11 +298,11 @@ export async function POST(req: Request) {
             } 
           })
 
-          console.log("Appointment Data:", JSON.stringify(appointmentData, null, 2));
+          console.log("Appointment Data", JSON.stringify(appointmentData, null, 2));
 
           if (!appointmentData?.data?.updateAppointment) {
             return {
-              message: `There was an error udpating the appointment. Please try again later.`,
+              message: `There was an error updating the appointment. Please try again later.`,
               appointment: null,
             }
           }
