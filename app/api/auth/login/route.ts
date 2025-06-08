@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     
-    const response = await makeSignedRequest('POST', '/auth/token', body);
+    const response = await makeSignedRequest('POST', '/api/v1/auth/token', body);
     
     // If response is a Response object (for 202 or 404 status), handle it
     if (response instanceof Response) {

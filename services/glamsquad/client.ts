@@ -1,4 +1,3 @@
-import { GraphQLClient } from 'graphql-request';
 import JSSHA from 'jssha';
 import { get } from 'lodash';
 
@@ -10,11 +9,11 @@ interface ErrorType extends Error {
 
 export async function makeSignedRequest(method: string, endpoint: string, body?: any) {
   const apiUrl = process.env.GLAMSQUAD_API_URL
-  const clientId = process.env.GLAMSQUAD_APP_ID
+  const clientId = process.env.GLAMSQUAD_CLIENT_ID
   const clientSecret = process.env.GLAMSQUAD_CLIENT_SECRET
-
+ 
   if (!clientId || !clientSecret || !apiUrl) {
-    throw new Error('GLAMSQUAD_APP_ID, GLAMSQUAD_API_URL, and GLAMSQUAD_CLIENT_SECRET environment variables are required');
+    throw new Error('GLAMSQUAD_CLIENT_ID, GLAMSQUAD_API_URL, and GLAMSQUAD_CLIENT_SECRET environment variables are required');
   }
 
   try {
@@ -57,7 +56,7 @@ export async function makeSignedRequest(method: string, endpoint: string, body?:
 
 export async function executeQuery<T = any>(query: string, variables?: any): Promise<{ data: T | null; error: Error | null }> {
   try {
-    const response = await makeSignedRequest('POST', '/graphql', {
+    const response = await makeSignedRequest('POST', '/api/v1/graphql', {
       query,
       variables
     });
