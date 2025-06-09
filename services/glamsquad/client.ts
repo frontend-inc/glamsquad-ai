@@ -11,7 +11,8 @@ export async function makeSignedRequest(method: string, endpoint: string, body?:
   const apiUrl = process.env.GLAMSQUAD_API_URL
   const clientId = process.env.GLAMSQUAD_CLIENT_ID
   const clientSecret = process.env.GLAMSQUAD_CLIENT_SECRET
- 
+  const jsonWebToken = process.env.GLAMSQUAD_JSON_WEB_TOKEN
+
   if (!clientId || !clientSecret || !apiUrl) {
     throw new Error('GLAMSQUAD_CLIENT_ID, GLAMSQUAD_API_URL, and GLAMSQUAD_CLIENT_SECRET environment variables are required');
   }
@@ -29,6 +30,7 @@ export async function makeSignedRequest(method: string, endpoint: string, body?:
       method,
       headers: {
         'Authorization': 'Glam ' + glamToken,
+        //'Authorization': `Bearer ${jsonWebToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body),

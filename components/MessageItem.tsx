@@ -10,6 +10,7 @@ import { AppointmentDetails } from './AppointmentDetails';
 import { AIAvatar } from './AIAvatar';
 import { LoadingDots } from './LoadingDots';
 import ReactMarkdown from 'react-markdown';
+import { BookingConfirmationWrapper } from './BookingConfirmationWrapper';
 
 interface MessageItemProps {
   message: Message;
@@ -84,6 +85,20 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
           </div>
         );
       case 'createAppointment':
+        if (toolInvocation.result.bookingParams) {
+          return (
+            <BookingConfirmationWrapper
+              bookingParams={toolInvocation.result.bookingParams}
+              onSendMessage={onSendMessage}
+              message={toolInvocation.result.message}
+            />
+          );
+        }
+        return (
+          <div className="max-w-none">
+            {toolInvocation.result.message}
+          </div>
+        );
       case 'updateAppointment':
         if (toolInvocation.result.appointment) {
           return (

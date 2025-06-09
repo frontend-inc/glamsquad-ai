@@ -9,7 +9,6 @@ import {
 } from "@/graphql/queries/users";
 import {
   MUTATION_UPDATE_APPOINTMENT,
-  MUTATION_CREATE_APPOINTMENT 
 } from "@/graphql/mutations/appointments";
 import { formatDate, formatAddress } from "@/lib/utils";
 import { z } from "zod";
@@ -172,50 +171,38 @@ export async function POST(req: Request) {
         },
       }),
       createAppointment: tool({
-        description: "Create an appointment for a service at a specific time, date, location and address for a user",
+        description: "Create an appointment confirmation for a service at a specific time, date, location and address for a user",
         parameters: z.object({
           startDateTime: z.string().describe("The start date and time of the appointment in YYYY-MM-DDTHH:mm:ss.sssZ format"),
           bookingTokens: z.array(z.string()).describe("An array of booking tokens for the appointment"),
           addressId: z.string().describe("The street address for the appointment"),
           userId: z.string().describe("The ID of the user creating the appointment"),
+          services: z.array(z.object({
+            id: z.string(),
+            name: z.string(),
+            price: z.number(),
+            duration: z.number()
+          })).describe("The services being booked"),
+          addOnServices: z.array(z.object({
+            id: z.string(),
+            name: z.string(),
+            price: z.number(),
+            duration: z.number()
+          })).optional().describe("Optional add-on services"),
+          totalPrice: z.number().describe("The total price of the booking including all services and add-ons")
         }),
-        execute: async ({ startDateTime, bookingTokens, addressId, userId }) => {
-
-          console.log("Creating appointment with data:", {
-            startDateTime,
-            bookingTokens,
-            addressId,
-            userId
-          });
-
-          const createAppointmentData = await executeQuery(MUTATION_CREATE_APPOINTMENT, { 
-            appointment: {
-              startDateTime: startDateTime,
-              bookingTokens: bookingTokens,
-              addressId: addressId,
-              creatorId: userId,
-              ownerId: userId
-            } 
-          })
-
-          console.log("Create Appointment Data:", JSON.stringify(createAppointmentData, null, 2));
-
-          if (!createAppointmentData?.data?.createAppointment) {
-            return {
-              message: `There was an error creating the appointment. Please try again later.`,
-              appointment: null,
-            }
-          }
-          const createdAppointment = createAppointmentData.data.createAppointment;
-
-          // Format the appointment start date in a user-friendly way
-          const formattedStartDateTime = formatDate(createdAppointment.startDateTime);
-
-          const fullAddress = formatAddress(createdAppointment.address);
-
+        execute: async ({ startDateTime, bookingTokens, addressId, userId, services, addOnServices, totalPrice }) => {
           return {
-            message: `Appointment is scheduled for ${formattedStartDateTime} at ${fullAddress}.`,
-            appointment: createdAppointment,
+            message: "Please confirm your booking details below.",
+            bookingParams: {
+              startDateTime,
+              bookingTokens,
+              addressId,
+              userId,
+              services,
+              addOnServices,
+              totalPrice
+            }
           }
         },
       }),
