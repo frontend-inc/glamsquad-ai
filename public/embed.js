@@ -1,11 +1,13 @@
 (function() {
   // Define the web component
-  class Chatbot extends HTMLElement {
+  class ChatBotWidget extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: 'open' });
       this.isOpen = false;
       this.chatbotUrl = this.getAttribute('src') || window.location.origin || 'http://localhost:3000';
+      this.width = this.getAttribute('width') || '400px';
+      this.height = this.getAttribute('height') || '600px';
     }
 
     connectedCallback() {
@@ -66,8 +68,8 @@
             position: absolute;
             bottom: 70px;
             right: 0;
-            width: 400px;
-            height: 600px;
+            width: ${this.width};
+            height: ${this.height};
             background: white;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
@@ -234,8 +236,8 @@
   }
 
   // Register the custom element
-  if (!customElements.get('glamsquad-chatbot')) {
-    customElements.define('glamsquad-chatbot', Chatbot);
+  if (!customElements.get('chat-bot-widget')) {
+    customElements.define('chat-bot-widget', ChatBotWidget);
   }
 
   // Auto-initialize if script has data-auto-init attribute
@@ -243,11 +245,11 @@
   if (currentScript && currentScript.getAttribute('data-auto-init') !== 'false') {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
-        const chatbot = document.createElement('glamsquad-chatbot');
+        const chatbot = document.createElement('chat-bot-widget');
         document.body.appendChild(chatbot);
       });
     } else {
-      const chatbot = document.createElement('glamsquad-chatbot');
+      const chatbot = document.createElement('chat-bot-widget');
       document.body.appendChild(chatbot);
     }
   }

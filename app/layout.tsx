@@ -1,5 +1,6 @@
 import { Geist, Playfair_Display } from "next/font/google";
 import { Header } from "@/components/Header";
+import Script from "next/script";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -30,6 +31,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.className} ${playfairDisplay.variable}`}>
+      <head>
+        <Script src="/embed.js" strategy='afterInteractive' data-auto-init="false" />      
+      </head>
       <body className="bg-white text-gray-900">
         <Header />
         <main className="min-h-screen flex flex-col pt-16 pb-24">
