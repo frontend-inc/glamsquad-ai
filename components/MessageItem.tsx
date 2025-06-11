@@ -11,6 +11,7 @@ import { AIAvatar } from './AIAvatar';
 import { LoadingDots } from './LoadingDots';
 import ReactMarkdown from 'react-markdown';
 import { BookingConfirmationWrapper } from './BookingConfirmationWrapper';
+import { RescheduleConfirmationWrapper } from './RescheduleConfirmationWrapper';
 
 interface MessageItemProps {
   message: Message;
@@ -100,6 +101,16 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
           </div>
         );
       case 'updateAppointment':
+        if (toolInvocation.result.rescheduleParams) {
+          return (
+            <RescheduleConfirmationWrapper
+              rescheduleParams={toolInvocation.result.rescheduleParams}
+              address={toolInvocation.result.rescheduleParams.address}
+              onSendMessage={onSendMessage}
+              message={toolInvocation.result.message}
+            />
+          );
+        }
         if (toolInvocation.result.appointment) {
           return (
             <div className="space-y-4">

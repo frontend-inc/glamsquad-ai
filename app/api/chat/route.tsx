@@ -206,40 +206,32 @@ export async function POST(req: Request) {
         },
       }),
       updateAppointment: tool({
-        description: "Update an appointment for a user",
+        description: "Update/reschedule an appointment for a user",
         parameters: z.object({
-          emailOrPhone: z.string().describe("The email or phone number of the user to cancel the appointment for"),
-          appointmentId: z.string().describe("The appointment ID to cancel. Do not ask the user for this."),
-          startDateTime: z.string().describe("The start date and time of the appointment in YYYY-MM-DDTHH:mm:ss.sssZ format"),
-          bookingTokens: z.array(z.string()).describe("An array of booking tokens for the appointment"),
+          emailOrPhone: z.string().describe("The email or phone number of the user to reschedule the appointment for"),
+          appointmentId: z.string().describe("The appointment ID to reschedule. Do not ask the user for this."),
+          startDateTime: z.string().describe("The new start date and time of the appointment in YYYY-MM-DDTHH:mm:ss.sssZ format"),
+          bookingTokens: z.array(z.string()).describe("An array of booking tokens for the new appointment time"),
           addressId: z.string().describe("The street address for the appointment"),
+          services: z.array(z.object({
+            id: z.string(),
+            name: z.string(),
+            price: z.number(),
+            duration: z.number()
+          })).optional().describe("The services being rescheduled"),
+          totalPrice: z.number().optional().describe("The total price of the appointment")
         }),
-        execute: async ({ appointmentId, startDateTime, bookingTokens, addressId }) => {
-
-          const appointmentData = await executeQuery(MUTATION_UPDATE_APPOINTMENT, { 
-            appointmentId: appointmentId,
-            appointment: {
-              startDateTime: startDateTime,
-              bookingTokens: bookingTokens,
-              addressId: addressId            
-            } 
-          })
-
-          if (!appointmentData?.data?.updateAppointment) {
-            return {
-              message: `There was an error updating the appointment. Please try again later.`,
-              appointment: null,
-            }
-          }
-          const updatedAppointment = appointmentData?.data?.updateAppointment;
-
-          const formattedStartDateTime = formatDate(updatedAppointment.startDateTime);
-
-          const fullAddress = formatAddress(updatedAppointment.address);
-
+        execute: async ({ appointmentId, startDateTime, bookingTokens, addressId, services, totalPrice }) => {
           return {
-            message: `Appointment for ${formattedStartDateTime} at ${fullAddress} has been cancelled.`,
-            appointment: updatedAppointment,
+            message: "Please confirm your rescheduled appointment details below.",
+            rescheduleParams: {
+              appointmentId,
+              startDateTime,
+              bookingTokens,
+              addressId,
+              services,
+              totalPrice
+            }
           }
         },
       }),
