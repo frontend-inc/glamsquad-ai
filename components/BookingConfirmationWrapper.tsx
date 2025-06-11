@@ -45,9 +45,7 @@ export function BookingConfirmationWrapper({ bookingParams, onSendMessage, messa
   };
 
   const handleCancelBooking = () => {
-    if (onSendMessage) {
-      onSendMessage("I've cancelled the booking. Would you like to try a different time?");
-    }
+    // No automatic message when cancelling
   };
 
   return (

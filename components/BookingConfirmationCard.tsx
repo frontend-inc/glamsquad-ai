@@ -100,30 +100,20 @@ export function BookingConfirmationCard({ bookingParams, onConfirm, onCancel, is
       </div>
       
       {!isConfirmed && (
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            className="flex-1"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
-            Cancel
-          </Button>
-          <Button 
-            className="flex-1"
-            onClick={onConfirm}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Confirming...
-              </>
-            ) : (
-              'Confirm Booking'
-            )}
-          </Button>
-        </div>
+        <Button 
+          className="w-full"
+          onClick={onConfirm}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Confirming...
+            </>
+          ) : (
+            'Confirm Booking'
+          )}
+        </Button>
       )}
     </Card>
   );
