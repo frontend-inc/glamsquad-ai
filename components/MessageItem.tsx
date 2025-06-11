@@ -74,7 +74,7 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
                 {toolInvocation.result.message}
               </div>
               {users.map((user: any) => (
-                <UserDetails key={user.id} user={user} />
+                <UserDetails key={user.id} user={user} onSendMessage={onSendMessage} />
               ))}
             </div>
           );
@@ -100,22 +100,6 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
           </div>
         );
       case 'updateAppointment':
-        if (toolInvocation.result.appointment) {
-          return (
-            <div className="space-y-4">
-              <div className="max-w-none">
-                {toolInvocation.result.message}
-              </div>
-              <AppointmentDetails appointment={toolInvocation.result.appointment} />
-            </div>
-          );
-        }
-        return (
-          <div className="max-w-none">
-            {toolInvocation.result.message}
-          </div>
-        );
-      case 'cancelAppointment':
         if (toolInvocation.result.appointment) {
           return (
             <div className="space-y-4">

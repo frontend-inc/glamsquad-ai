@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, CalendarIcon, Clock } from "lucide-react";
+import { AppointmentModal } from './AppointmentModal';
 
 interface Address {
   id: string;
@@ -19,7 +21,14 @@ interface Appointment {
   startDateTime: string;
   endDateTime: string;
   isCanceled?: boolean;
+  cancellationReason?: string;
+  totalPrice?: number;
+  finalPrice?: number;
+  bookingTokens?: string[];
+  address?: Address;
   appointmentServices: Array<{
+    id: string;
+    bookingToken?: string;
     service: {
       id: string;
       name: string;
@@ -40,9 +49,12 @@ interface UserData {
 
 interface UserDetailsProps {
   user: UserData;
+  onSendMessage?: (message: string) => void;
 }
 
-export function UserDetails({ user }: UserDetailsProps) {
+export function UserDetails({ user, onSendMessage }: UserDetailsProps) {
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const formatDateTime = (dateTime: string) => {
     const date = new Date(dateTime);
     return new Intl.DateTimeFormat('en-US', {
@@ -70,28 +82,44 @@ export function UserDetails({ user }: UserDetailsProps) {
     return appointmentDate > now && !appointment.isCanceled;
   }) || [];
 
+  const handleAppointmentClick = (appointment: Appointment) => {
+    // Add address from user if not in appointment
+    if (!appointment.address && user.addresses && user.addresses.length > 0) {
+      appointment.address = user.addresses[0]; // Use first address as default
+    }
+    setSelectedAppointment(appointment);
+    setIsModalOpen(true);
+  };
+
   return (
-    <Card className="w-full md:min-w-[300px]">
-      <CardHeader>
-        <h2 className="text-xl font-semibold text-secondary font-playfair">
-          {user.nameFirst} {user.nameLast}
-        </h2>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Upcoming Appointments */}
-        {upcomingAppointments.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="font-semibold flex items-center gap-2 text-secondary font-playfair">
-              <CalendarIcon className="h-4 w-4" />
-              Upcoming Appointments
-            </h4>
-            <div className="grid gap-3">
-              {upcomingAppointments.map((appointment) => (
-                <AppointmentCard key={appointment.id} appointment={appointment} />
-              ))}
+    <>
+      <Card className="w-full md:min-w-[300px]">
+        <CardHeader>
+          <h2 className="text-xl font-semibold text-secondary font-playfair">
+            {user.nameFirst} {user.nameLast}
+          </h2>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Upcoming Appointments */}
+          {upcomingAppointments.length > 0 && (
+            <div className="space-y-3">
+              <h4 className="font-semibold flex items-center gap-2 text-secondary font-playfair">
+                <CalendarIcon className="h-4 w-4" />
+                Upcoming Appointments
+              </h4>
+              <div className="grid gap-3">
+                {upcomingAppointments.map((appointment) => (
+                  <div 
+                    key={appointment.id}
+                    onClick={() => handleAppointmentClick(appointment)}
+                    className="cursor-pointer"
+                  >
+                    <AppointmentCard appointment={appointment} />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {user.addresses && user.addresses.length > 0 && (
           <div className="space-y-3">
@@ -108,6 +136,19 @@ export function UserDetails({ user }: UserDetailsProps) {
         )}
       </CardContent>
     </Card>
+    
+    {selectedAppointment && (
+      <AppointmentModal
+        appointment={selectedAppointment}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedAppointment(null);
+        }}
+        onSendMessage={onSendMessage}
+      />
+    )}
+    </>
   );
 }
 
@@ -137,7 +178,7 @@ function AppointmentCard({ appointment }: { appointment: Appointment }) {
   }, 0);
 
   return (
-    <Card className="p-3">
+    <Card className="p-3 hover:shadow-md transition-shadow">
       <div className="space-y-2">
         {appointment.isCanceled && (
           <Badge variant="destructive" className="text-xs w-fit">

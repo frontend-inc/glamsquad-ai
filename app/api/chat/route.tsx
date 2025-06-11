@@ -126,6 +126,8 @@ export async function POST(req: Request) {
 
           const user = userData.data.user;
 
+          console.log("User Data:", JSON.stringify(user, null, 2));
+
           return {
             message: `I found your account by email`,
             user: user,
@@ -243,43 +245,6 @@ export async function POST(req: Request) {
           return {
             message: `Appointment for ${formattedStartDateTime} at ${fullAddress} has been cancelled.`,
             appointment: updatedAppointment,
-          }
-        },
-      }),
-      cancelAppointment: tool({
-        description: "Cancel an existing appointment for a user",
-        parameters: z.object({
-          emailOrPhone: z.string().describe("The email or phone number of the user to cancel the appointment for"),
-          appointmentId: z.string().describe("The appointment ID to cancel. Do not ask the user for this."),
-          cancellationReason: z.string().describe("The reason for canceling the appointment")          
-        }),
-        execute: async ({ appointmentId, cancellationReason }) => {
-
-          const appointmentData = await executeQuery(MUTATION_UPDATE_APPOINTMENT, { 
-            appointmentId: appointmentId,
-            appointment: {
-              isCanceled: true,
-              cancellationReason              
-            } 
-          })
-
-          console.log("Appointment Data", JSON.stringify(appointmentData, null, 2));
-
-          if (!appointmentData?.data?.updateAppointment) {
-            return {
-              message: `There was an error updating the appointment. Please try again later.`,
-              appointment: null,
-            }
-          }
-          const cancelledAppointment = appointmentData?.data?.updateAppointment;
-
-          const formattedStartDateTime = formatDate(cancelledAppointment.startDateTime);
-
-          const fullAddress = formatAddress(cancelledAppointment.address);
-
-          return {
-            message: `Appointment for ${formattedStartDateTime} at ${fullAddress} has been cancelled.`,
-            appointment: cancelledAppointment,
           }
         },
       }),
