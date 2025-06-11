@@ -46,6 +46,20 @@
           .chatbot-button svg {
             width: 28px;
             height: 28px;
+            transition: opacity 0.2s ease;
+          }
+
+          .chatbot-button .close-icon {
+            position: absolute;
+            opacity: 0;
+          }
+
+          .chatbot-button.open .chat-icon {
+            opacity: 0;
+          }
+
+          .chatbot-button.open .close-icon {
+            opacity: 1;
           }
 
           .chatbot-container {
@@ -138,9 +152,11 @@
         </style>
 
         <button class="chatbot-button" aria-label="Open chat">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H8L12 22L16 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H15.17L12 19.17L8.83 16H4V4H20V16Z" fill="white"/>
-            <path d="M7 9H17V11H7V9ZM7 5H17V7H7V5Z" fill="white"/>
+          <svg class="chat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+            <path d="M20.7134 8.12811L20.4668 8.69379C20.2864 9.10792 19.7136 9.10792 19.5331 8.69379L19.2866 8.12811C18.8471 7.11947 18.0555 6.31641 17.0677 5.87708L16.308 5.53922C15.8973 5.35653 15.8973 4.75881 16.308 4.57612L17.0252 4.25714C18.0384 3.80651 18.8442 2.97373 19.2761 1.93083L19.5293 1.31953C19.7058 0.893489 20.2942 0.893489 20.4706 1.31953L20.7238 1.93083C21.1558 2.97373 21.9616 3.80651 22.9748 4.25714L23.6919 4.57612C24.1027 4.75881 24.1027 5.35653 23.6919 5.53922L22.9323 5.87708C21.9445 6.31641 21.1529 7.11947 20.7134 8.12811ZM10 3H14V5H10C6.68629 5 4 7.68629 4 11C4 14.61 6.46208 16.9656 12 19.4798V17H14C17.3137 17 20 14.3137 20 11H22C22 15.4183 18.4183 19 14 19V22.5C9 20.5 2 17.5 2 11C2 6.58172 5.58172 3 10 3Z"></path>
+          </svg>
+          <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+            <path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"></path>
           </svg>
         </button>
 
@@ -177,8 +193,11 @@
 
     openChat() {
       const container = this.shadowRoot.querySelector('.chatbot-container');
+      const button = this.shadowRoot.querySelector('.chatbot-button');
       
       container.style.display = 'flex';
+      button.classList.add('open');
+      button.setAttribute('aria-label', 'Close chat');
       
       // Trigger animation
       requestAnimationFrame(() => {
@@ -191,8 +210,11 @@
 
     closeChat() {
       const container = this.shadowRoot.querySelector('.chatbot-container');
+      const button = this.shadowRoot.querySelector('.chatbot-button');
       
       container.classList.remove('open');
+      button.classList.remove('open');
+      button.setAttribute('aria-label', 'Open chat');
       
       setTimeout(() => {
         container.style.display = 'none';
