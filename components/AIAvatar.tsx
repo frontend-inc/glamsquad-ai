@@ -12,7 +12,7 @@ export function AIAvatar({ size = 'lg', className }: AIAvatarProps) {
   const sizeClasses = {
     sm: 'h-10 w-10',
     md: 'h-16 w-16', 
-    lg: 'h-24 w-24'
+    lg: 'h-20 w-20'
   };
 
   return (

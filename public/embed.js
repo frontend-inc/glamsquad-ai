@@ -8,6 +8,7 @@
       this.chatbotUrl = this.getAttribute('src') || window.location.origin || 'http://localhost:3000';
       this.width = this.getAttribute('width') || '400px';
       this.height = this.getAttribute('height') || '600px';
+      this.color = this.getAttribute('color') || '#000';
     }
 
     connectedCallback() {
@@ -30,7 +31,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background-color: #000;
+            background-color: ${this.color};
             border: none;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -88,7 +89,7 @@
           }
 
           .chatbot-header {
-            background: #000;
+            background: ${this.color};
             color: white;
             padding: 16px;
             display: flex;

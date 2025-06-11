@@ -33,7 +33,7 @@ export default function EmbedDemoPage() {
             </p>
             
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2 text-gray-700">Step 1: Auto-initialize with script tag</h3>
+              <h3 className="text-lg font-semibold mb-2 text-gray-700">Option 1: Auto-initialize with script tag</h3>
               <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4">
                 <code className="text-sm">
                   {`<script src="https://supabase.frontend.com/assets/embed.js"></script>`}
@@ -41,11 +41,36 @@ export default function EmbedDemoPage() {
               </div>
             </div>
             
-            <div>
-              <h3 className="text-lg font-semibold mb-2 text-gray-700">Step 2: Use Web Component directly</h3>
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2 text-gray-700">Option 2: Use Web Component directly</h3>
               <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
                 <code className="text-sm">
-                  {`<chat-bot-widget src="https://www.frontend.co/agents/my-agent" width="400px" height="600px"></chat-bot-widget>`}
+                  {`<chat-bot-widget 
+  src="https://www.frontend.co/agents/my-agent" 
+  width="400px" 
+  height="600px"
+></chat-bot-widget>`}
+                </code>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-2 text-gray-700">Customization Options</h3>
+              <p className="text-gray-600 mb-3">You can customize the chatbot appearance with the following attributes:</p>
+              <ul className="list-disc list-inside text-gray-600 mb-4">
+                <li><code className="bg-gray-100 px-1">width</code> - Width of the chat container (default: 400px)</li>
+                <li><code className="bg-gray-100 px-1">height</code> - Height of the chat container (default: 600px)</li>
+                <li><code className="bg-gray-100 px-1">color</code> - Primary color for the chat icon and header (default: #000)</li>
+              </ul>
+              <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
+                <code className="text-sm">
+                  {`<!-- Example with custom color -->
+<chat-bot-widget 
+  src="https://www.frontend.co/agents/my-agent" 
+  width="400px" 
+  height="600px"
+  color="#7C3AED"
+></chat-bot-widget>`}
                 </code>
               </div>
             </div>
@@ -66,7 +91,7 @@ export default function EmbedDemoPage() {
       </div>
       
       {/*//@ts-ignore */}
-      <chat-bot-widget src={chatbotUrl} width="400px" height="600px" />
+      <chat-bot-widget src={chatbotUrl} width="400px" height="640px" color="#0E2C86" />
     </>
   );
 }

@@ -29,13 +29,13 @@ export default function AboutCard({ setInput }: AboutCardProps) {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10">
+    <div className="max-w-xl mx-auto">
       <Card className="border-0">
         <CardHeader>
           <div className="flex justify-center mb-4">
             <AIAvatar />
           </div>
-          <CardTitle className="font-bold text-4xl text-center text-secondary font-playfair">How can I help you today?</CardTitle>
+          <CardTitle className="font-bold text-3xl text-center text-secondary font-playfair">How can I help you today?</CardTitle>
           <CardDescription className='text-center'>Ask questions, book a service, or update your appointment with our Glamsquad AI.</CardDescription>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground/90 leading-normal">         
@@ -45,7 +45,7 @@ export default function AboutCard({ setInput }: AboutCardProps) {
               <Button 
                 key={index} 
                 variant="outline" 
-                className="text-sm" 
+                className="text-sm w-full md:w-auto" 
                 onClick={() => handleSuggestionClick(suggestion.value)}
               >
                 {suggestion.key}
