@@ -3,6 +3,13 @@
 import { Button } from "./ui/button";
 import AuthButtonClient from "./auth/auth-button-client";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export default function AuthButton() {
   const [user, setUser] = useState<{ email: string } | null>(null);
@@ -31,12 +38,23 @@ export default function AuthButton() {
   
   if (user) {
     return (
-      <div className="flex items-center gap-4">
-        {user.email}
-        <Button type="button" variant={"outline"} onClick={handleSignOut}>
-          Sign out
-        </Button>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+            <Avatar>
+              <AvatarFallback>{user.email.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem disabled className="font-normal">
+            {user.email}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>
+            Sign out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   } 
   
