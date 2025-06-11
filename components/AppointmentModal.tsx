@@ -9,6 +9,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -52,8 +62,7 @@ interface AppointmentModalProps {
 
 export function AppointmentModal({ appointment, isOpen, onClose, onSendMessage }: AppointmentModalProps) {
   const [isCancelling, setIsCancelling] = useState(false);
-  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-  const [cancellationReason, setCancellationReason] = useState('');
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const formatDateTime = (dateTime: string) => {
     const date = new Date(dateTime);
@@ -117,7 +126,7 @@ export function AppointmentModal({ appointment, isOpen, onClose, onSendMessage }
         },
         body: JSON.stringify({
           appointmentId: appointment.id,
-          cancellationReason: cancellationReason || 'Customer requested cancellation'
+          cancellationReason: 'Customer requested cancellation'
         }),
       });
 
@@ -127,17 +136,14 @@ export function AppointmentModal({ appointment, isOpen, onClose, onSendMessage }
         throw new Error(data.error || 'Failed to cancel appointment');
       }
 
-      // Close modal and send confirmation message
+      // Close both dialogs
+      setShowCancelDialog(false);
       onClose();
-      if (onSendMessage) {
-        onSendMessage(`Your appointment on ${formatDateTime(appointment.startDateTime)} has been cancelled.`);
-      }
     } catch (error) {
       console.error('Error cancelling appointment:', error);
       // Could add error toast here
     } finally {
       setIsCancelling(false);
-      setShowCancelConfirm(false);
     }
   };
 
@@ -149,14 +155,15 @@ export function AppointmentModal({ appointment, isOpen, onClose, onSendMessage }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Appointment Details</DialogTitle>
-          <DialogDescription>
-            {appointment.isCanceled ? 'This appointment has been cancelled' : 'View and manage your appointment'}
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Appointment Details</DialogTitle>
+            <DialogDescription>
+              {appointment.isCanceled ? 'This appointment has been cancelled' : 'View and manage your appointment'}
+            </DialogDescription>
+          </DialogHeader>
         
         <div className="space-y-4">
           {/* Date and Time */}
@@ -235,46 +242,50 @@ export function AppointmentModal({ appointment, isOpen, onClose, onSendMessage }
 
         {!appointment.isCanceled && (
           <DialogFooter className="gap-2 sm:gap-0">
-            {showCancelConfirm ? (
-              <>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCancelConfirm(false)}
-                  disabled={isCancelling}
-                >
-                  Keep Appointment
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={handleCancelAppointment}
-                  disabled={isCancelling}
-                >
-                  {isCancelling ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Cancelling...
-                    </>
-                  ) : (
-                    'Confirm Cancellation'
-                  )}
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCancelConfirm(true)}
-                >
-                  Cancel Appointment
-                </Button>
-                <Button onClick={handleReschedule}>
-                  Reschedule Appointment
-                </Button>
-              </>
-            )}
+            <Button
+              variant="outline"
+              onClick={() => setShowCancelDialog(true)}
+            >
+              Cancel Appointment
+            </Button>
+            <Button onClick={handleReschedule}>
+              Reschedule Appointment
+            </Button>
           </DialogFooter>
         )}
       </DialogContent>
     </Dialog>
+
+    <AlertDialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Cancel Appointment</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to cancel your appointment on {formatDateTime(appointment.startDateTime)}? 
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isCancelling}>
+            Keep Appointment
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleCancelAppointment}
+            disabled={isCancelling}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            {isCancelling ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Cancelling...
+              </>
+            ) : (
+              'Cancel Appointment'
+            )}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }
