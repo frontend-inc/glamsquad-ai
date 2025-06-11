@@ -9,7 +9,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "GlamSquad AI Assistant",
+  title: "Glamsquad Assistant",
   description: "Book beauty services with GlamSquad's AI assistant",
 };
 

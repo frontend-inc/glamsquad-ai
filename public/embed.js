@@ -165,7 +165,7 @@
 
         <div class="chatbot-container">
           <div class="chatbot-header">
-            <span class="chatbot-title">GlamSquad AI Assistant</span>
+            <span class="chatbot-title">GlamSquad Assistant</span>
             <button class="close-button" aria-label="Close chat">✕</button>
           </div>
           <iframe class="chatbot-iframe" src="${this.chatbotUrl}" title="GlamSquad AI Chat"></iframe>
