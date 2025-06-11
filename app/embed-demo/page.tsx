@@ -33,19 +33,19 @@ export default function EmbedDemoPage() {
             </p>
             
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2 text-gray-700">Option 1: Auto-initialize with script tag</h3>
+              <h3 className="text-lg font-semibold mb-2 text-gray-700">Step 1: Auto-initialize with script tag</h3>
               <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4">
                 <code className="text-sm">
-                  {`<script src="https://your-domain.com/embed.js" data-auto-init="true"></script>`}
+                  {`<script src="https://supabase.frontend.com/assets/embed.js"></script>`}
                 </code>
               </div>
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-2 text-gray-700">Option 2: Use Web Component directly</h3>
+              <h3 className="text-lg font-semibold mb-2 text-gray-700">Step 2: Use Web Component directly</h3>
               <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
                 <code className="text-sm">
-                  {`<chat-bot-widget src="https://your-domain.com" width="400px" height="600px"></chat-bot-widget>`}
+                  {`<chat-bot-widget src="https://www.frontend.co/agents/my-agent" width="400px" height="600px"></chat-bot-widget>`}
                 </code>
               </div>
             </div>
