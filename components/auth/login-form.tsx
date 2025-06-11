@@ -31,7 +31,6 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          grant_type: "password",
           username: email,
           password: password,
         }),
@@ -40,7 +39,6 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
       if (response.ok) {
         const data = await response.json()
 
-        console.log("Login successful:", data)
         // Store the token in localStorage
         localStorage.setItem("authToken", data.access_token)
         localStorage.setItem("userEmail", email)

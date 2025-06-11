@@ -55,12 +55,21 @@ export const QUERY_USER_BY_PHONE = `
         id 
         startDateTime
         endDateTime
-        isCanceled        
+        isCanceled   
+        address {
+          id
+          city
+          state
+          street
+          apartment
+          zip
+        }             
         appointmentServices {
           service {
             id 
             name
             price
+            duration
           }
         } 
       }

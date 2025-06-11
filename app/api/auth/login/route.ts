@@ -3,17 +3,15 @@ import { makeSignedRequest } from '@/services/glamsquad/client';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    
-    const response = await makeSignedRequest('POST', '/api/v1/auth/token', body);
-    
-    // If response is a Response object (for 202 or 404 status), handle it
-    if (response instanceof Response) {
-      const data = await response.json();
-      return NextResponse.json(data, { status: response.status });
+    let body = await req.json();
+    body = {
+      grant_type: "password",
+      ...body 
     }
     
-    return NextResponse.json(response);
+    const data = await makeSignedRequest('POST', '/api/v1/auth/token', body);
+    
+    return NextResponse.json(data, { status: 200 });  
   } catch (error: any) {
     console.error('Login error:', error);
     return NextResponse.json(

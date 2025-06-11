@@ -24,7 +24,6 @@ export default function Chat() {
     initialMessages: [],
     api: '/api/chat',    
     onFinish: (message) => {
-      console.log('Message finished:', message);
     }
   })
 

@@ -89,7 +89,6 @@ export async function POST(req: Request) {
               startDateTime: datetime,
             });
 
-            console.log("Availability Data:", JSON.stringify(availabilityData, null, 2));
 
             const hasAvailability = availabilityData?.data?.availableAppointmentServicesInTimeRange?.appointmentServices?.length > 0 ? 
               true : false;
@@ -125,8 +124,6 @@ export async function POST(req: Request) {
           }
 
           const user = userData.data.user;
-
-          console.log("User Data:", JSON.stringify(user, null, 2));
 
           return {
             message: `I found your account by email`,
@@ -227,8 +224,6 @@ export async function POST(req: Request) {
               addressId: addressId            
             } 
           })
-
-          console.log("Updated Appointment Data:", JSON.stringify(appointmentData, null, 2));
 
           if (!appointmentData?.data?.updateAppointment) {
             return {
