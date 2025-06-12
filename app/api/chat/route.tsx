@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     
     The current user is: 
     ${userData?.data?.me ? 
-      JSON.stringify(userData.data.me, null, 2) : 
+      `The user is logged in as ${userData?.data?.me.nameFirst} ${userData?.data?.me.nameLast} with email ${userData?.data?.me.email}.` : 
       "The user is not logged in. Ask the user to signin to use this service."
     }
 
@@ -91,7 +91,6 @@ export async function POST(req: Request) {
               startDateTime: datetime,
             });
 
-
             const hasAvailability = availabilityData?.data?.availableAppointmentServicesInTimeRange?.appointmentServices?.length > 0 ? 
               true : false;
 
@@ -109,6 +108,18 @@ export async function POST(req: Request) {
           }
         },
       }),     
+      queryMe: tool({
+        description: "Query the current user account including appointments and addresses",
+        parameters: z.object({
+          email: z.string().describe("The email of the user to query account information for")
+        }),
+        execute: async () => {
+          return {
+            message: "Here is your account information.",
+            user: userData?.data?.me || null,
+          }
+        },
+      }),
       queryServices: tool({
         description: "List services by market",
         parameters: z.object({

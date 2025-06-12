@@ -10,8 +10,7 @@ interface ErrorType extends Error {
 export async function makeSignedRequest(method: string, endpoint: string, body?: any, accessToken?: string) {
   const apiUrl = process.env.GLAMSQUAD_API_URL
   const clientId = process.env.GLAMSQUAD_CLIENT_ID
-  const clientSecret = process.env.GLAMSQUAD_CLIENT_SECRET
-  const jsonWebToken = process.env.GLAMSQUAD_JWT_TOKEN  
+  const clientSecret = process.env.GLAMSQUAD_CLIENT_SECRET as string
 
   if (!apiUrl) {
     throw new Error('GLAMSQUAD_API_URL environment variable is required');
@@ -37,8 +36,7 @@ export async function makeSignedRequest(method: string, endpoint: string, body?:
       const hmac = sha.getHMAC('B64');
       const glamToken = [clientId, hmac].join(':');
       
-      // Use JWT token if available, otherwise use Glam token
-      authHeader = jsonWebToken ? `Bearer ${jsonWebToken}` : `Glam ${glamToken}`;
+      authHeader = `Glam ${glamToken}`;
     }
 
     const res = await fetch(url, {
@@ -76,7 +74,7 @@ export async function executeQuery<T = any>(query: string, variables?: any, acce
       query,
       variables
     }, accessToken);
-    
+
     if (response.errors) {
       throw new Error(response.errors[0]?.message || 'GraphQL error');
     }

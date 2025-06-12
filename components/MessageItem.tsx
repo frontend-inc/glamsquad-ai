@@ -62,8 +62,7 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
             {toolInvocation.result.message}
           </div>
         );
-      case 'queryUserByEmail':
-      case 'queryUserByPhone':
+      case 'queryMe':
         if (toolInvocation.result.user) {
           const users = Array.isArray(toolInvocation.result.user) 
             ? toolInvocation.result.user 

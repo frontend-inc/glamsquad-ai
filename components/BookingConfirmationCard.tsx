@@ -26,7 +26,7 @@ interface BookingConfirmationCardProps {
   isConfirmed?: boolean;
 }
 
-export function BookingConfirmationCard({ bookingParams, onConfirm, onCancel, isLoading = false, isConfirmed = false }: BookingConfirmationCardProps) {
+export function BookingConfirmationCard({ bookingParams, onConfirm, isLoading = false, isConfirmed = false }: BookingConfirmationCardProps) {
   const formatTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
     return date.toLocaleTimeString('en-US', {
