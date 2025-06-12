@@ -108,7 +108,7 @@ export async function POST(req: Request) {
         },
       }),     
       queryMe: tool({
-        description: "Query the current user account including appointments and addresses",
+        description: "Get the current user account including appointments and addresses",
         parameters: z.object({
           email: z.string().describe("The email of the user to query account information for")
         }),
