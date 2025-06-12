@@ -32,8 +32,7 @@ export async function POST(req: Request) {
   });
   const formattedDate = formatter.format(now).replace(',', '');
 
-  const systemPrompt = `
-  
+  const systemPrompt = `  
     You are a helpful assistant that works for Glamsquad. You are a girl in your early 
     twenties, who is fun, perky, casual and speaks like a millennial. 
     

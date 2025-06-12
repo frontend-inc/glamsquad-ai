@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import HeaderAuth from "@/components/header-auth";
 
 export function Header() {
   return (
