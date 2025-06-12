@@ -18,9 +18,6 @@ export function Header() {
             priority
           />
         </Link>
-        <div className="flex-1 flex justify-end">
-          <HeaderAuth />
-        </div>
       </div>
     </nav>
   );

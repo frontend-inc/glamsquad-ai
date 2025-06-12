@@ -166,13 +166,6 @@ function AppointmentCard({ appointment }: { appointment: Appointment }) {
     }).format(date);
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(price);
-  };
-
   const totalPrice = appointment.appointmentServices.reduce((total, service) => {
     return total + service.service.price;
   }, 0);
@@ -200,11 +193,6 @@ function AppointmentCard({ appointment }: { appointment: Appointment }) {
                 </Badge>
               ))}
             </div>
-          </div>
-          <div className="text-right">
-            <span className="text-sm font-semibold">
-              {formatPrice(totalPrice)}
-            </span>
           </div>
         </div>
       </div>
