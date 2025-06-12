@@ -8,6 +8,7 @@ import {
 } from "@/graphql/queries/users";
 import { z } from "zod";
 import { executeQuery } from "@/services/glamsquad/client";
+import { search } from "@/services/algolia/client";
 
 export async function POST(req: Request) {
 
@@ -196,6 +197,31 @@ export async function POST(req: Request) {
               services,
               totalPrice
             }
+          }
+        },
+      }),
+      queryArticles: tool({
+        description: "Answer questions about services, markets, or company policies.",
+        parameters: z.object({
+          category: z.string().describe("The category to search for, such as hair, makeup, service, policies")
+        }),
+        execute: async ({ category }) => {
+          try {
+            const searchResults = await search(category);
+            const articles = searchResults.results[0]?.hits || [];
+            
+            console.log("Search results:", articles, searchResults);
+
+            return {
+              message: `I found ${articles.length} articles about ${category}.`,
+              articles: articles
+            };
+          } catch (error) {
+            console.error("Error searching articles:", error);
+            return {
+              message: `There was an error searching for articles about ${category}.`,
+              articles: []
+            };
           }
         },
       }),
