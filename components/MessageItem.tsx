@@ -9,10 +9,12 @@ import { UserDetails } from './UserDetails';
 import { AppointmentDetails } from './AppointmentDetails';
 import { AIAvatar } from './AIAvatar';
 import { LoadingDots } from './LoadingDots';
-import ReactMarkdown from 'react-markdown';
 import { BookingConfirmationWrapper } from './BookingConfirmationWrapper';
 import { RescheduleConfirmationWrapper } from './RescheduleConfirmationWrapper';
 import { ArticleCard } from './ArticleCard';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { SimpleMarkdown } from './SimpleMarkdown';
 
 interface MessageItemProps {
   message: Message;
@@ -20,6 +22,7 @@ interface MessageItemProps {
 }
 
 export function MessageItem({ message, onSendMessage }: MessageItemProps) {
+  const [showAllArticles, setShowAllArticles] = useState(false);
   
   const renderToolInvocationResult = (toolInvocation: any) => {
     
@@ -127,20 +130,34 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
           </div>
         );
       case 'queryArticles':
+        const articles = toolInvocation.result.articles || [];
+        const displayedArticles = showAllArticles ? articles : articles.slice(0, 3);
+        
         return (
           <div className="space-y-4">
-            <div className="max-w-none">
+            <SimpleMarkdown className="max-w-none">
               {toolInvocation.result.message}
-            </div>
-            {toolInvocation.result.articles && toolInvocation.result.articles.length > 0 && (
-              <div className="space-y-2">
-                {toolInvocation.result.articles.map((article: any, index: number) => (
-                  <ArticleCard
-                    key={index}
-                    article={ article }                    
-                  />
-                ))}
-              </div>
+            </SimpleMarkdown>
+            {articles.length > 0 && (
+              <>
+                <div className="space-y-2">
+                  {displayedArticles.map((article: any, index: number) => (
+                    <ArticleCard
+                      key={index}
+                      article={ article }                    
+                    />
+                  ))}
+                </div>
+                {articles.length > 3 && (
+                  <Button
+                    onClick={() => setShowAllArticles(!showAllArticles)}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    {showAllArticles ? 'Show Less' : `Show More (${articles.length - 3} more)`}
+                  </Button>
+                )}
+              </>
             )}
           </div>
         );
@@ -176,7 +193,7 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
                 if (parsedContent && typeof parsedContent === 'object' && 'message' in parsedContent) {
                   return (
                     <div key={index} className="max-w-none text-foreground">
-                      <ReactMarkdown>{parsedContent.message}</ReactMarkdown>
+                      <SimpleMarkdown>{parsedContent.message}</SimpleMarkdown>
                     </div>
                   );
                 }
@@ -184,7 +201,7 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
                 // If parsing fails, return the text as is
                 return (
                   <div key={index} className="max-w-none text-foreground">
-                    <ReactMarkdown>{part.text}</ReactMarkdown>
+                    <SimpleMarkdown>{part.text}</SimpleMarkdown>
                   </div>
                 );
               }
@@ -199,7 +216,7 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
     // If no parts, always display the content
     return (
       <div className="max-w-none text-foreground">
-        <ReactMarkdown>{content}</ReactMarkdown>
+        <SimpleMarkdown>{content}</SimpleMarkdown>
       </div>
     );
   };

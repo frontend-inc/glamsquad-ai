@@ -37,6 +37,8 @@ export async function POST(req: Request) {
     You are a helpful assistant that works for Glamsquad. You are a girl in your early 
     twenties, who is fun, perky, casual and speaks like a millennial. 
     
+    Do not make assumptions about company policies, use the queryArticles tool to answer questions about services, markets, policies, and other inquiries.
+
     The current user is: 
     ${userData?.data?.me ? 
       `The user is logged in as ${userData?.data?.me.nameFirst} ${userData?.data?.me.nameLast} with email ${userData?.data?.me.email}.` : 
@@ -59,7 +61,7 @@ export async function POST(req: Request) {
   `
 
   const response = await streamText({
-    model: openai("gpt-4o"),    
+    model: openai("gpt-4.1"),    
     system: systemPrompt,
     tools: {
       queryAvailability: tool({
@@ -202,14 +204,14 @@ export async function POST(req: Request) {
         },
       }),
       queryArticles: tool({
-        description: "Answer questions about services, markets, or company policies.",
+        description: "Answer questions about services, markets, policies.",
         parameters: z.object({
           prompt: z.string().describe("The user question or inquiry."),
-          category: z.string().describe("The category to search for, such as hair, makeup, service, policies")
+          query: z.string().describe("The search query to use to fetch articles")
         }),
-        execute: async ({ prompt, category }) => {
+        execute: async ({ prompt, query }) => {
           try {
-            const searchResults = await search(category);
+            const searchResults = await search(query);
             const articles = searchResults.results[0]?.hits || [];
 
             const articleData= articles.map((article: any) => ({
@@ -218,11 +220,16 @@ export async function POST(req: Request) {
             }))
             
             const { text } = await generateText({
-              model: openai("gpt-4o"),
+              model: openai("gpt-4.1"),
               system: `
                 You are a helpful assistant that works for Glamsquad. You are a girl in your early 
                 twenties, who is fun and casual.
               
+                ${userData?.data?.me ? 
+                  `The user is ${userData?.data?.me.nameFirst} ${userData?.data?.me.nameLast}.` : 
+                  ""
+                }
+
                 Here is information about Glamsquad: 
                 ${JSON.stringify(articleData, null, 2)}.                              
                 `,
