@@ -4,20 +4,18 @@ import { QUERY_MARKETS } from "@/graphql/queries/markets";
 import { QUERY_SERVICES_BY_MARKET } from "@/graphql/queries/services";
 import { QUERY_AVAILABILITY_IN_TIME_RANGE } from "@/graphql/queries/availability";
 import {
-   QUERY_USER_BY_EMAIL,
-   QUERY_USER_BY_PHONE 
+   QUERY_ME 
 } from "@/graphql/queries/users";
-import {
-  MUTATION_UPDATE_APPOINTMENT,
-} from "@/graphql/mutations/appointments";
-import { formatDate, formatAddress } from "@/lib/utils";
 import { z } from "zod";
 import { executeQuery } from "@/services/glamsquad/client";
 
 export async function POST(req: Request) {
 
-  const { messages } = await req.json()
+  const { messages, data } = await req.json()
+  const accessToken = data?.accessToken
   
+  const userData = await executeQuery(QUERY_ME, {}, accessToken);
+
   const marketsData = await executeQuery(QUERY_MARKETS, {});
 
   // todays date and time in EST timezone 
@@ -39,10 +37,14 @@ export async function POST(req: Request) {
     You are a helpful assistant that works for Glamsquad. You are a girl in your early 
     twenties, who is fun, perky, casual and speaks like a millennial. 
     
+    The current user is: 
+    ${userData?.data?.me ? 
+      JSON.stringify(userData.data.me, null, 2) : 
+      "The user is not logged in. Ask the user to signin to use this service."
+    }
+
     You help customers find services and book appointments for hair, makeup, nails, and more.
     
-    Always get the user's email or phone number to find their account first.
-
     Todays date in EST timezone is ${formattedDate}.
     
     Here is a JSON array of services and markets available:
@@ -107,54 +109,6 @@ export async function POST(req: Request) {
           }
         },
       }),     
-      queryUserByEmail: tool({
-        description: "Find a user and address by email",
-        parameters: z.object({
-          email: z.string().email().describe("The email address to query user by"),
-        }),
-        execute: async ({ email }) => {
-
-          const userData = await executeQuery(QUERY_USER_BY_EMAIL, { email });
-
-          if (!userData?.data?.user) {
-            return {
-              message: `No user found with the email ${email}. Please check the email and try again.`,
-              user: null,
-            }
-          }
-
-          const user = userData.data.user;
-
-          return {
-            message: `I found your account by email`,
-            user: user,
-          }          
-        }
-      }),
-      queryUserByPhone: tool({
-        description: "Find a user and address by phone",
-        parameters: z.object({
-          phone: z.string().email().describe("The phone number to query user by in +1XXXXXXXXXX format"),
-        }),
-        execute: async ({ phone }) => {
-
-          const userData = await executeQuery(QUERY_USER_BY_PHONE, { phone });
-
-          if (!userData?.data?.user) {
-            return {
-              message: `No user found with the email ${phone}. Please check the phone number and try again.`,
-              user: null,
-            }
-          }
-
-          const user = userData.data.user;
-
-          return {
-            message: `I found your account by phone`,
-            user: user,
-          }          
-        }
-      }),
       queryServices: tool({
         description: "List services by market",
         parameters: z.object({

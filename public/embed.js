@@ -197,6 +197,7 @@
     openChat() {
       const container = this.shadowRoot.querySelector('.chatbot-container');
       const button = this.shadowRoot.querySelector('.chatbot-button');
+      const iframe = this.shadowRoot.querySelector('.chatbot-iframe');
       
       container.style.display = 'flex';
       button.classList.add('open');
@@ -209,6 +210,27 @@
       
       this.isOpen = true;
       this.dispatchEvent(new CustomEvent('chatbot-opened'));
+      
+      // Send accessToken to iframe after it loads
+      if (iframe) {
+        const sendAccessToken = () => {
+          const accessToken = localStorage.getItem('accessToken');
+          if (accessToken) {
+            iframe.contentWindow.postMessage({
+              type: 'ACCESS_TOKEN',
+              accessToken: accessToken
+            }, this.chatbotUrl);
+          }
+        };
+        
+        // If iframe is already loaded, send immediately
+        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+          sendAccessToken();
+        } else {
+          // Otherwise wait for it to load
+          iframe.addEventListener('load', sendAccessToken, { once: true });
+        }
+      }
     }
 
     closeChat() {

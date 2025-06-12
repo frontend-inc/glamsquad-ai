@@ -65,10 +65,12 @@ export function RescheduleConfirmationCard({ rescheduleParams, address, onConfir
   const handleConfirmReschedule = async () => {
     setIsRescheduling(true);
     try {
+      const accessToken = localStorage.getItem('accessToken');
       const response = await fetch('/api/reschedule-appointment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': accessToken ? `Bearer ${accessToken}` : '',
         },
         body: JSON.stringify({
           appointmentId: rescheduleParams.appointmentId,

@@ -3,6 +3,19 @@ import { MUTATION_UPDATE_APPOINTMENT } from "@/graphql/mutations/appointments";
 
 export async function POST(req: Request) {
   try {
+    // Check for access token in Authorization header
+    const authHeader = req.headers.get('Authorization');
+    const accessToken = authHeader?.replace('Bearer ', '');
+    
+    if (!accessToken) {
+      return new Response(
+        JSON.stringify({ 
+          error: "Unauthorized: Access token required" 
+        }), 
+        { status: 401 }
+      );
+    }
+
     const { appointmentId, cancellationReason } = await req.json();
 
     if (!appointmentId) {
@@ -20,7 +33,7 @@ export async function POST(req: Request) {
         isCanceled: true,
         cancellationReason: cancellationReason || "Customer requested cancellation"
       } 
-    });
+    }, accessToken);
 
     if (!appointmentData?.data?.updateAppointment) {
       return new Response(

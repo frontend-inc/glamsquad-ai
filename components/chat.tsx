@@ -35,11 +35,36 @@ export default function Chat() {
     scrollToBottom();
   }, [messages]);
 
+  // Listen for ACCESS_TOKEN message from parent window
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Verify the message is from a trusted origin
+      if (event.data && event.data.type === 'ACCESS_TOKEN') {
+        const { accessToken } = event.data;
+        console.log('Received ACCESS_TOKEN from parent window:', accessToken);
+        if (accessToken) {
+          localStorage.setItem('accessToken', accessToken);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
+
   const handleSubmitInput = async (e: React.FormEvent) => {
     e.preventDefault()
     
     try {
-      handleSubmit()
+      const accessToken = localStorage.getItem('accessToken');
+      handleSubmit(e, { 
+        data: { 
+          accessToken: accessToken 
+        } 
+      });
     } catch (error) {
       // If OpenAI API key is missing or any other error occurs
       setMessages(prev => [
@@ -57,8 +82,13 @@ export default function Chat() {
     // Set the input value
     handleInputChange({ target: { value: message } } as React.ChangeEvent<HTMLInputElement>);
     
-    // Submit the form
-    await handleSubmit();
+    // Submit the form with accessToken
+    const accessToken = localStorage.getItem('accessToken');
+    await handleSubmit(undefined, { 
+      data: { 
+        accessToken: accessToken 
+      } 
+    });
   }
   
   return (    

@@ -19,10 +19,12 @@ export function BookingConfirmationWrapper({ bookingParams, onSendMessage, messa
   const handleConfirmBooking = async () => {
     setIsConfirming(true);
     try {
+      const accessToken = localStorage.getItem('accessToken');
       const response = await fetch('/api/confirm-booking', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': accessToken ? `Bearer ${accessToken}` : '',
         },
         body: JSON.stringify(bookingParams),
       });

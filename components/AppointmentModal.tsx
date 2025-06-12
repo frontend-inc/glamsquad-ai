@@ -119,10 +119,12 @@ export function AppointmentModal({ appointment, isOpen, onClose, onSendMessage }
   const handleCancelAppointment = async () => {
     setIsCancelling(true);
     try {
+      const accessToken = localStorage.getItem('accessToken');
       const response = await fetch('/api/cancel-appointment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': accessToken ? `Bearer ${accessToken}` : '',
         },
         body: JSON.stringify({
           appointmentId: appointment.id,

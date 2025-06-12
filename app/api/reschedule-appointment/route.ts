@@ -4,6 +4,17 @@ import { MUTATION_UPDATE_APPOINTMENT } from '@/graphql/mutations/appointments';
 
 export async function POST(request: Request) {
   try {
+    // Check for access token in Authorization header
+    const authHeader = request.headers.get('Authorization');
+    const accessToken = authHeader?.replace('Bearer ', '');
+    
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: 'Unauthorized: Access token required' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { appointmentId, startDateTime, bookingTokens, addressId } = body;
 
@@ -21,7 +32,7 @@ export async function POST(request: Request) {
         bookingTokens: bookingTokens,
         addressId: addressId
       }
-    });
+    }, accessToken);
 
     if (!appointmentData?.data?.updateAppointment) {
       return NextResponse.json(
