@@ -12,6 +12,7 @@ import { LoadingDots } from './LoadingDots';
 import ReactMarkdown from 'react-markdown';
 import { BookingConfirmationWrapper } from './BookingConfirmationWrapper';
 import { RescheduleConfirmationWrapper } from './RescheduleConfirmationWrapper';
+import { ArticleCard } from './ArticleCard';
 
 interface MessageItemProps {
   message: Message;
@@ -123,6 +124,24 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
         return (
           <div className="max-w-none">
             {toolInvocation.result.message}
+          </div>
+        );
+      case 'queryArticles':
+        return (
+          <div className="space-y-4">
+            <div className="max-w-none">
+              {toolInvocation.result.message}
+            </div>
+            {toolInvocation.result.articles && toolInvocation.result.articles.length > 0 && (
+              <div className="space-y-2">
+                {toolInvocation.result.articles.map((article: any, index: number) => (
+                  <ArticleCard
+                    key={index}
+                    article={ article }                    
+                  />
+                ))}
+              </div>
+            )}
           </div>
         );
       default:
