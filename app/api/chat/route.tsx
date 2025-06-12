@@ -1,4 +1,4 @@
-import { streamText, tool } from "ai"
+import { streamText, generateText, tool } from "ai"
 import { openai } from "@ai-sdk/openai"
 import { QUERY_MARKETS } from "@/graphql/queries/markets";
 import { QUERY_SERVICES_BY_MARKET } from "@/graphql/queries/services";
@@ -43,7 +43,8 @@ export async function POST(req: Request) {
       "The user is not logged in. You can help them answer questions but cannot book appointments or modify appoinments."
     }
 
-    You help customers find services and book appointments for hair, makeup, nails, and more.
+    You help customers find services and book appointments for hair, makeup, nails, and more. Look up services 
+    in their market before confirming what services area available.
     
     Todays date in EST timezone is ${formattedDate}.
     
@@ -109,7 +110,7 @@ export async function POST(req: Request) {
         },
       }),     
       queryMe: tool({
-        description: "Query the current user account including appointments and addresses",
+        description: "Query the current user account including appointments and addresses. The user must be logged in.",
         parameters: z.object({
           email: z.string().describe("The email of the user to query account information for")
         }),
@@ -135,7 +136,7 @@ export async function POST(req: Request) {
         },
       }),
       createAppointment: tool({
-        description: "Create an appointment confirmation for a service at a specific time, date, location and address for a user",
+        description: "Create an appointment confirmation for a service at a specific time, date, location and address for a user. The user must be logged in.",
         parameters: z.object({
           startDateTime: z.string().describe("The start date and time of the appointment in YYYY-MM-DDTHH:mm:ss.sssZ format"),
           bookingTokens: z.array(z.string()).describe("An array of booking tokens for the appointment"),
@@ -171,7 +172,7 @@ export async function POST(req: Request) {
         },
       }),
       updateAppointment: tool({
-        description: "Update/reschedule an appointment for a user",
+        description: "Update/reschedule an appointment for a user. The user must be logged in.",
         parameters: z.object({
           emailOrPhone: z.string().describe("The email or phone number of the user to reschedule the appointment for"),
           appointmentId: z.string().describe("The appointment ID to reschedule. Do not ask the user for this."),
@@ -203,19 +204,41 @@ export async function POST(req: Request) {
       queryArticles: tool({
         description: "Answer questions about services, markets, or company policies.",
         parameters: z.object({
+          prompt: z.string().describe("The user question or inquiry."),
           category: z.string().describe("The category to search for, such as hair, makeup, service, policies")
         }),
-        execute: async ({ category }) => {
+        execute: async ({ prompt, category }) => {
           try {
             const searchResults = await search(category);
             const articles = searchResults.results[0]?.hits || [];
+
+            const articleData= articles.map((article: any) => ({
+              title: article.title,
+              content: article.article_content
+            }))
             
-            console.log("Search results:", articles, searchResults);
+            const { text } = await generateText({
+              model: openai("gpt-4o"),
+              system: `
+                You are a helpful assistant that works for Glamsquad. You are a girl in your early 
+                twenties, who is fun and casual.
+              
+                Here is information about Glamsquad: 
+                ${JSON.stringify(articleData, null, 2)}.                              
+                `,
+              messages: [
+                {
+                  role: "user",
+                  content: prompt 
+                }
+              ]
+            });
 
             return {
-              message: `I found ${articles.length} articles about ${category}.`,
+              message: text,
               articles: articles
-            };
+            }
+
           } catch (error) {
             console.error("Error searching articles:", error);
             return {
