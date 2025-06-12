@@ -4,13 +4,30 @@ import { Card } from '@/components/ui/card';
 import { FileText } from 'lucide-react';
 
 interface ArticleCardProps {
-  title: string;
-  snippet?: string;
-  url?: string;
+  article: {
+    id: number
+    title: string
+    article_content: string
+    slug: string
+    custom_domain: string
+    locale: string
+  }
 }
 
-export function ArticleCard({ title, snippet, url }: ArticleCardProps) {
+export function ArticleCard({ article }: ArticleCardProps) {
+  console.log('Rendering ArticleCard', article);
+  const { 
+    id,
+    title, 
+    article_content, 
+    slug,
+    locale,
+    custom_domain 
+  } = article;
+  const snippet = article_content ? article_content.slice(0, 40) + '...' : '';
+  const url = `https://${custom_domain}/${locale}/${slug}-${id}`
 
+  console.log('Article URL:', url);
   return (
     <Card className="p-4 space-y-2 hover:shadow-md transition-shadow cursor-pointer">
       <div className="flex items-start gap-3">
@@ -20,6 +37,14 @@ export function ArticleCard({ title, snippet, url }: ArticleCardProps) {
           {snippet && (
             <p className="text-sm text-muted-foreground line-clamp-2">{snippet}</p>
           )}
+          <a 
+            href={url} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-blue-500 hover:underline text-sm"
+            >
+            Read more
+            </a>
         </div>
       </div>
     </Card>

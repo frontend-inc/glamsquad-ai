@@ -137,9 +137,7 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
                 {toolInvocation.result.articles.map((article: any, index: number) => (
                   <ArticleCard
                     key={index}
-                    title={article.title || article.name || 'Untitled'}
-                    snippet={article.article_content}
-                    url={article.url}
+                    article={ article }                    
                   />
                 ))}
               </div>

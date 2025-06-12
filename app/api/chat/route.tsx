@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     The current user is: 
     ${userData?.data?.me ? 
       `The user is logged in as ${userData?.data?.me.nameFirst} ${userData?.data?.me.nameLast} with email ${userData?.data?.me.email}.` : 
-      "The user is not logged in. Ask the user to signin to use this service."
+      "The user is not logged in. You can help them answer questions but cannot book appointments or modify appoinments."
     }
 
     You help customers find services and book appointments for hair, makeup, nails, and more.
