@@ -9,10 +9,10 @@ export default function ProtectedPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const authToken = localStorage.getItem("authToken");
+    const accessToken = localStorage.getItem("accessToken");
     const userEmail = localStorage.getItem("userEmail");
     
-    if (!authToken || !userEmail) {
+    if (!accessToken || !userEmail) {
       window.location.href = "/";
       return;
     }

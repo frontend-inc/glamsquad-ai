@@ -17,16 +17,16 @@ export default function AuthButton() {
 
   useEffect(() => {
     setIsClient(true);
-    const authToken = localStorage.getItem("authToken");
+    const accessToken = localStorage.getItem("accessToken");
     const userEmail = localStorage.getItem("userEmail");
     
-    if (authToken && userEmail) {
+    if (accessToken && userEmail) {
       setUser({ email: userEmail });
     }
   }, []);
 
   const handleSignOut = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("userEmail");
     setUser(null);
     window.location.reload();
