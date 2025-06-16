@@ -1,12 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import AuthModal from '@/components/auth/auth-modal';
+import { Button } from '@/components/ui/button';
 
 export default function EmbedDemoPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const chatbotUrl = process.env.NEXT_PUBLIC_CHATBOT_URL
 
   useEffect(() => {
+    // Check if user is already logged in
+    const token = localStorage.getItem('accessToken');
+    const email = localStorage.getItem('userEmail');
+    if (token) {
+      setIsLoggedIn(true);
+      setUserEmail(email);
+    }
+
     return () => {
       // Cleanup: remove chatbot element when component unmounts
       const chatbot = document.querySelector('chat-bot-widget');
@@ -16,13 +28,45 @@ export default function EmbedDemoPage() {
     };
   }, []);
 
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    const email = localStorage.getItem('userEmail');
+    setUserEmail(email);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userEmail');
+    setIsLoggedIn(false);
+    setUserEmail(null);
+  };
+
   return (
     <>
-      <div className="min-h-screen bg-gray-50 p-8">
+      <div className="min-h-screen p-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-8 text-gray-900">
-            Chatbot Embed Demo
-          </h1>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900">
+              Chatbot Embed Demo
+            </h1>
+            <div className="flex items-center gap-4">
+              {isLoggedIn && userEmail && (
+                <span className="text-gray-700">
+                  Welcome, {userEmail}!
+                </span>
+              )}
+              {isLoggedIn ? (
+                <Button onClick={handleLogout} variant="outline">
+                  Logout
+                </Button>
+              ) : (
+                <AuthModal 
+                  triggerElement={<Button>Login</Button>}
+                  onClose={handleLoginSuccess}
+                />
+              )}
+            </div>
+          </div>
           
           <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">

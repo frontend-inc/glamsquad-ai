@@ -40,7 +40,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
         const data = await response.json()
 
         // Store the token in localStorage
-        localStorage.setItem("authToken", data.access_token)
+        localStorage.setItem("accessToken", data.access_token)
         localStorage.setItem("userEmail", email)
         
         setSuccess("You have been logged in successfully.")
