@@ -63,6 +63,7 @@ export async function POST(req: Request) {
   const response = await streamText({
     model: openai("gpt-4.1"),    
     system: systemPrompt,
+    maxSteps: 5,
     tools: {
       queryAvailability: tool({
         description: "Query availability for a service",
