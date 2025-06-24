@@ -45,8 +45,8 @@ export function ServicesGrid({ services, message, onSendMessage }: ServicesGridP
     return true;
   });
   
-  const displayedServices = showAll ? filteredServices : filteredServices.slice(0, 10);
-  const hasMore = filteredServices.length > 10;
+  const displayedServices = showAll ? filteredServices : filteredServices.slice(0, 3);
+  const hasMore = filteredServices.length > 3;
 
   return (
     <div className="w-full">

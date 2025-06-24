@@ -162,11 +162,7 @@ export function MessageItem({ message, onSendMessage }: MessageItemProps) {
           </div>
         );
       default:
-        return (
-          <div className="max-w-none">
-            {JSON.stringify(toolInvocation.result)}
-          </div>
-        );
+        return null;
     }
   };
 
